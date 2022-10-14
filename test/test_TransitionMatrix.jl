@@ -34,14 +34,11 @@ end
 end
 
 @testset "Transition Rate Matrix Consistenty: Edge Case" begin
-    # edge case. Only see 3 out of 4 states
     timeseries = [1, 1, 1, 2, 2, 4, 4, 4, 2, 1]
     generator_computed1 = generator(timeseries)
     generator_computed2 = generator(timeseries, 4)
     generator_computed3 = generator(timeseries, 4, dt = 1)
     generator_computed4 = generator(timeseries, 4, dt = 0.5)
-
-    perron_frobenius_computed = perron_frobenius(timeseries)
 
     @test all(generator_computed1 .== generator_computed2)
     @test all(generator_computed2 .== generator_computed3)
