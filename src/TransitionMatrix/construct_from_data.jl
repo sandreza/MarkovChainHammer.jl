@@ -28,11 +28,8 @@ perron_frobenius(markov_chain) = perron_frobenius(markov_chain, maximum(markov_c
 
 function holding_times(markov_chain, number_of_states; dt=1)
     holding_times = [[] for n in 1:number_of_states]
-
     push!(holding_times[markov_chain[1]], dt)
-
     M = length(markov_chain)
-    # loop through steps
     for i in 2:M
         current_state = markov_chain[i]
         previous_state = markov_chain[i-1]
