@@ -18,6 +18,7 @@ function perron_frobenius(markov_chain, number_of_states)
     for i in eachindex(normalization)
         if normalization[i] == 0.0
             perron_frobenius_matrix[:, i] *= false
+            perron_frobenius_matrix[i,i] = 1.0
         end
     end
     return perron_frobenius_matrix
