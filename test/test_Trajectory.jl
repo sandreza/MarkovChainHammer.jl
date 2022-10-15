@@ -18,7 +18,6 @@ Random.seed!(12345)
             @test(errorlist[end] < 6 / sqrt(n))
             P2 = exp(Q * dt)
             push!(errorlist2, norm(P2 - P_exact) / norm(P_exact))
-            push!(plist, P)
             self_consistent_error = 2 * norm(P2 - P) / norm(P)
             @test(errorlist2[end] < maximum([6 / sqrt(n), self_consistent_error]))
         end
@@ -40,7 +39,6 @@ end
             @test(errorlist[end] < 6 / sqrt(n))
             P2 = exp(Q * dt)
             push!(errorlist2, norm(P2 - P_exact) / norm(P_exact))
-            push!(plist, P)
             self_consistent_error = 2 * norm(P2 - P) / norm(P)
             @test(errorlist2[end] < maximum([6 / sqrt(n), self_consistent_error]))
         end
@@ -48,7 +46,7 @@ end
 end
 
 @testset "Convergence Test: Heuristic" begin
-    Q_exact = [-1/2 1/3 0.0; 1/2 -2/3 1/3; 0.0 1/3 -1/3]
+    Q = [-1/2 1/3 0.0; 1/2 -2/3 1/3; 0.0 1/3 -1/3]
     default_size = length(generate(Q))
     @test(default_size <= length(generate(0.1 * Q)))
     @test(default_size >= length(generate(10 * Q)))
