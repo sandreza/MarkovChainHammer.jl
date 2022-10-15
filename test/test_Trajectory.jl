@@ -3,11 +3,11 @@ import MarkovChainHammer.TransitionMatrix: count_operator, generator, holding_ti
 import MarkovChainHammer.Trajectory: generate
 Random.seed!(12345)
 
-@testset "Column Sum Consistency" begin
+@testset "Convergence Test" begin
     errorlist = []
     errorlist2 = []
     Q_exact = [-1/2 1/3 0.0; 1/2 -2/3 1/3; 0.0 1/3 -1/3]
-    
+
     for dt in [0.3, 1.0, 3.0]
         P_exact = exp(dt * Q_exact)
         for n in [10^i for i in 1:6]
