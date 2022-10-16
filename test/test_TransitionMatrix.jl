@@ -3,10 +3,9 @@ import MarkovChainHammer.TransitionMatrix: count_operator, generator, holding_ti
 
 @testset "Column Sum Consistency" begin
     timeseries = [1, 1, 1, 2, 2, 3, 3, 3, 2, 1]
-
     ones_vector = ones(3)
     zeros_vector = zeros(3)
-
+    
     count_operator_computed = count_operator(timeseries)
     generator_computed = generator(timeseries)
     perron_frobenius_computed = perron_frobenius(timeseries)

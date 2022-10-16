@@ -22,18 +22,21 @@ function rk4(f, s, dt)
     return s + (k1 + 2 * k2 + 2 * k3 + k4) * dt / 6
 end
 
+fixed_points = [[-sqrt(72), -sqrt(72), 27], [0.0, 0.0, 0.0], [sqrt(72), sqrt(72), 27]]
+markov_states = fixed_points
+
 timeseries = Vector{Float64}[]
 markov_chain = Int64[]
-s = [14.0, 20.0, 27.0]
-subdiv = 200
-push!(timeseries, s)
-dt = 1.5586522107162 / subdiv
-markov_states = [[-sqrt(72), -sqrt(72), 27], [0.0, 0.0, 0.0], [sqrt(72), sqrt(72), 27]]
+initial_condition = [14.0, 20.0, 27.0]
+push!(timeseries, initial_condition)
+dt = 1.5586522107162 / 64 
 iterations = 1000000
 for i in ProgressBar(2:iterations)
-    local s = rk4(lorenz!, timeseries[i-1], dt)
-    push!(markov_chain, argmin([norm(s - ms) for ms in markov_states]))
-    push!(timeseries, s)
+    local state = rk4(lorenz!, timeseries[i-1], dt)
+    push!(timeseries, state)
+    # partition state space according to most similar markov state
+    markov_index = argmin([norm(state - markov_state) for markov_state in markov_states])
+    push!(markov_chain, markov_index)
 end
 
 ## construct transition matrix
@@ -49,10 +52,32 @@ Q[1, 2] = Q[3, 2] = (pQ[1, 2] + pQ[3, 2]) * 0.5
 p = V[:, end] ./ sum(V[:, end])
 
 ## look ensemble average versus time average of an observable
-observable(u) = u[3]
+observable(u) = u[1] * u[2] * u[3] # ⟨xyz⟩
 # ensemble average
-g_ensemble =  sum(observable.(markov_states) .* p)
+g_ensemble = sum(observable.(markov_states) .* p)
 g_timeseries = mean(observable.(timeseries))
 println("The ensemble average is $(g_ensemble)")
 println("The timeseries average is $(g_timeseries)")
+
+## construct ensemble and temporal averages of first and second moments
+primitive_labels = ["x", "y", "z"]
+observables = []
+labels = []
+for i in 1:3
+    push!(observables, u -> u[i])
+    push!(labels, primitive_labels[i])
+end
+for i in 1:3
+    for j in i:3
+        push!(observables, u -> u[i] * u[j])
+        push!(labels, primitive_labels[i] * primitive_labels[j])
+    end
+end
+
+for i in eachindex(labels)
+    g = observables[i]
+    println(" ensemble: ⟨$(labels[i])⟩ = $(sum(g.(markov_states) .* p))")
+    println(" temporal: ⟨$(labels[i])⟩ = $(mean(g.(timeseries)))")
+    println("--------------------------------------------")
+end
 
