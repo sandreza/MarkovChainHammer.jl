@@ -53,7 +53,7 @@ p = V[:, end] ./ sum(V[:, end])
 
 ## look ensemble average versus time average of an observable
 observable(u) = u[1] * u[2] * u[3] # ⟨xyz⟩
-# ensemble average
+# ensemble and temporal average
 g_ensemble = sum(observable.(markov_states) .* p)
 g_timeseries = mean(observable.(timeseries))
 println("The ensemble average is $(g_ensemble)")
