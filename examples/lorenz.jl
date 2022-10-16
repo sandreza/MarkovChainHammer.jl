@@ -52,12 +52,12 @@ Q[1, 2] = Q[3, 2] = (pQ[1, 2] + pQ[3, 2]) * 0.5
 p = V[:, end] ./ sum(V[:, end])
 
 ## look ensemble average versus time average of an observable
-observable(u) = u[1] * u[2] * u[3] # ⟨xyz⟩
+observable(u) = u[1] * u[2] * u[3] # ⟨xyz⟩ triple correlation
 # ensemble and temporal average
 g_ensemble = sum(observable.(markov_states) .* p)
 g_timeseries = mean(observable.(timeseries))
-println("The ensemble average is $(g_ensemble)")
-println("The timeseries average is $(g_timeseries)")
+println("The ensemble average   ⟨xyz⟩  is $(g_ensemble)")
+println("The timeseries average ⟨xyz⟩  is $(g_timeseries)")
 
 ## construct ensemble and temporal averages of first and second moments
 primitive_labels = ["x", "y", "z"]
