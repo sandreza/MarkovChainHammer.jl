@@ -30,7 +30,7 @@ markov_chain = Int64[]
 initial_condition = [14.0, 20.0, 27.0]
 push!(timeseries, initial_condition)
 dt = 1.5586522107162 / 64 
-iterations = 1000000
+iterations = 1000
 for i in ProgressBar(2:iterations)
     local state = rk4(lorenz!, timeseries[i-1], dt)
     push!(timeseries, state)
