@@ -34,7 +34,7 @@ end
 generate(Q, n; dt=1, initial_condition=rand(1:size(Q)[1])) = generate(Q, n, dt, initial_condition)
 
 function generate(Q; dt = 1, decorrelation_threshold = 0.01, initial_condition=rand(1:size(Q)[1]) )
-    n = step_heuristic(Q; dt = 1, decorrelation_threshold = 0.01)
+    n = step_heuristic(Q; dt = 1, decorrelation_threshold = decorrelation_threshold)
     return generate(Q, n, dt, initial_condition)
 end
 
