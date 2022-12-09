@@ -1,5 +1,6 @@
 using MarkovChainHammer, Test, Revise, LinearAlgebra
 import MarkovChainHammer.TransitionMatrix: count_operator, generator, holding_times, perron_frobenius
+import MarkovChainHammer.TransitionMatrix: symmetric_generator, symmetric_perron_frobenius
 import MarkovChainHammer.TransitionMatrix: entropy, steady_state, koopman_modes, decorrelation_times
 
 @testset "Column Sum Consistency" begin
@@ -30,6 +31,60 @@ end
     @test all(count_operator_exact .== count_operator_computed)
     @test all(generator_exact .== generator_computed)
     @test all(perron_frobenius_exact .== perron_frobenius_computed)
+end
+
+@testset "Symmetric Hand Constructed: Default Case" begin
+    # default case. See all states in timeseries
+    timeseries = [1, 1, 1, 2, 2, 3, 3, 3, 2, 1]
+    generator_exact = [-1/2 1/3 0.0; 1/2 -2/3 1/3; 0.0 1/3 -1/3]
+    perron_frobenius_exact = [2/3 1/3 0.0; 1/3 1/3 1/3; 0.0 1/3 2/3]
+
+    # trivial symmetry
+    symmetries = [i -> i]
+
+    generator_computed = symmetric_generator(timeseries, symmetries)
+    perron_frobenius_computed = symmetric_perron_frobenius(timeseries, symmetries)
+    @test all(generator_exact .== generator_computed)
+    @test all(perron_frobenius_exact .== perron_frobenius_computed)
+
+    # every state is equally likely symmetry
+    function symmetry1(markov_index)
+        if markov_index == 1
+            return 2
+        elseif markov_index == 2
+            return 3
+        elseif markov_index == 3
+            return 1
+        else
+            return 0
+        end
+    end
+
+    function symmetry2(markov_index)
+        if markov_index == 1
+            return 3
+        elseif markov_index == 2
+            return 1
+        elseif markov_index == 3
+            return 2
+        else
+            return 0
+        end
+    end
+
+    symmetries = [symmetry1, symmetry2]
+
+    perron_frobenius_exact = [5/9 2/9 2/9; 2/9 5/9 2/9; 2/9 2/9 5/9]
+
+    generator_computed = symmetric_generator(timeseries, symmetries)
+    perron_frobenius_computed = symmetric_perron_frobenius(timeseries, symmetries)
+
+    @test all(generator_computed' .== generator_computed)
+    @test all([generator_computed[i,i] .== generator_computed[1] for i in 1:3])
+
+    @test all(perron_frobenius_computed' .== perron_frobenius_computed)
+    @test all(perron_frobenius_exact .≈ perron_frobenius_computed)
+    
 end
 
 @testset "Hand Constructed: Edge Case" begin
@@ -126,6 +181,6 @@ end
     Q = [-1.0 2.0; 1.0 -2.0]
     Λ = eigvals(Q)
     D = decorrelation_times(Q)
-    @test D[end] == Inf 
-    @test D[1] == 1/Λ[1]
+    @test D[end] == Inf
+    @test D[1] == 1 / Λ[1]
 end
