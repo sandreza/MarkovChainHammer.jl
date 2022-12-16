@@ -22,7 +22,7 @@ p_empirical = [sum(markov_chain .== i) / length(markov_chain) for i in 1:3]
 Q_empirical = generator(markov_chain; dt=0.1)
 P_empirical = perron_frobenius(markov_chain)
 
-# Compare
+# Compare steady states
 println("Exact steady state: "); 
 display(p_exact)
 println("Empirical steady state: "); 
@@ -30,7 +30,7 @@ display(p_empirical)
 println("Relative Percent Error: ", 100 * norm(p_exact - p_empirical) / norm(p_exact))
 println("--------------------------------------")
 
-# Compare
+# Compare transfer operators
 println("Exact transfer operator: "); 
 display(P)
 println("Empirical transfer operator: "); 
@@ -38,8 +38,7 @@ display(P_empirical)
 println("Relative Percent Error: ", 100 * norm(P - P_empirical) / norm(P))
 println("--------------------------------------")
 
-##
-# Compare
+# Compare generators
 println("Exact generator: "); 
 display(Q)
 println("Empirical generator: "); 
