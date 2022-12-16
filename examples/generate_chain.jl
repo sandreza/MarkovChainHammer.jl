@@ -17,7 +17,7 @@ p_exact = steady_state(P)
 # Generate Markov Chain
 markov_chain = generate(P)
 
-# Generate Emperical Construction from Markov Chain
+# Generate Empirical Construction from Markov Chain
 p_empirical = [sum(markov_chain .== i) / length(markov_chain) for i in 1:3]
 Q_empirical = generator(markov_chain; dt=0.1)
 P_empirical = perron_frobenius(markov_chain)
