@@ -24,6 +24,18 @@ function perron_frobenius(markov_chain, number_of_states)
     return perron_frobenius_matrix
 end
 
+"""
+`perron_frobenius(markov_chain)`
+
+# Description 
+    Calculate the perron-frobenius matrix from a markov chain.
+
+# Arguments
+- `markov_chain::AbstractVector`: A vector of integers representing the state of a markov chain at each time step.
+
+# Returns
+- `perron_frobenius_matrix::Matrix`: The perron-frobenius matrix of the markov chain.
+"""
 perron_frobenius(markov_chain) = perron_frobenius(markov_chain, maximum(markov_chain))
 
 function holding_times(markov_chain, number_of_states; dt=1)
@@ -71,6 +83,19 @@ function generator(markov_chain, number_of_states; dt=1)
     return generator_matrix
 end
 
+"""
+`generator(markov_chain; dt=1)`
+
+# Description
+    Calculate the generator matrix from a markov chain.
+
+# Arguments
+- `markov_chain::AbstractVector`: A vector of integers representing the state of a markov chain at each time step.
+- `dt::Real`: The time step between each state.
+
+# Returns
+- `generator_matrix::Matrix`: The generator matrix of the markov chain.
+"""
 generator(markov_chain; dt=1) = generator(markov_chain, maximum(markov_chain); dt=dt)
 
 function symmetric_generator(markov_chain, symmetries, number_of_states; dt=1)
@@ -92,6 +117,19 @@ function symmetric_generator(markov_chain, symmetries, number_of_states; dt=1)
     return Q
 end
 
+"""
+`symmetric_generator(markov_chain, symmetries; dt=1)`
+# Description
+    Calculate the generator matrix from a markov chain with symmetries.
+
+# Arguments
+- `markov_chain::AbstractVector`: A vector of integers representing the state of a markov chain at each time step.
+- `symmetries::AbstractVector`: A vector of functions that are symmetries of the markov chain.
+- `dt::Real`: The time step between each state.
+
+# Returns
+- `generator_matrix::Matrix`: The generator matrix of the markov chain.
+"""
 symmetric_generator(markov_chain, symmetries; dt=1) = symmetric_generator(markov_chain, symmetries, length(union(markov_chain)); dt=dt)
 
 function symmetric_perron_frobenius(markov_chain, symmetries, number_of_states)
@@ -103,4 +141,18 @@ function symmetric_perron_frobenius(markov_chain, symmetries, number_of_states)
     return P
 end
 
+
+"""
+`symmetric_perron_frobenius(markov_chain, symmetries)`
+
+# Description
+    Calculate the perron-frobenius matrix from a markov chain with symmetries.
+
+# Arguments
+- `markov_chain::AbstractVector`: A vector of integers representing the state of a markov chain at each time step.
+- `symmetries::AbstractVector`: A vector of functions that are symmetries of the markov chain.
+
+# Returns
+- `perron_frobenius_matrix::Matrix`: The perron-frobenius matrix of the markov chain.
+"""
 symmetric_perron_frobenius(markov_chain, symmetries) = symmetric_perron_frobenius(markov_chain, symmetries, length(union(markov_chain)))
