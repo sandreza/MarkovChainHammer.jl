@@ -1,7 +1,7 @@
 name = "MarkovChainHammer"
 uuid = "38c40fd0-bccb-4723-b30d-b2caea0ad8d9"
 authors = ["Andre Souza <andrenogueirasouza@gmail.com>"]
-version = "0.0.0"
+version = "0.0.1"
 
 [compat]
 julia = ">= 1.8.0"
