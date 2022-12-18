@@ -2,7 +2,7 @@
 `histogram(array, bins=minimum([100, length(array)]), normalization=:uniform, custom_range=false)`
 
 # Description 
-    Compute the histogram of an array.
+    Compute the histogram of an array. Useful for barplot in GLMakie.
 
 # Arguments
 - `array::AbstractArray`: Array to compute the histogram of.
