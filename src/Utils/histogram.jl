@@ -1,18 +1,17 @@
 """
-function histogram(
-    array;
-    bins=minimum([100, length(array)]),
-    normalization=:uniform,
-    custom_range=false
-)
+`histogram(array, bins=minimum([100, length(array)]), normalization=:uniform, custom_range=false)`
+
 # Description 
-    Utility function for barplot in GLMakie 
-# Arguments 
-- array; one dimensional sequence of numbers 
-# Keyword Arguments 
-- bins; how many buckets to use, always uniform
-- normalization; how much to weight each value of array (default 1/length(array))
-- custom_range; range for uniform bucket
+    Compute the histogram of an array.
+
+# Arguments
+- `array::AbstractArray`: Array to compute the histogram of.
+- `bins::Integer`: Number of bins to use.
+- `normalization::AbstractArray`: Normalization to use. If `:uniform`, then the normalization is uniform.
+- `custom_range::Tuple`: Custom range to use. If `false`, then the range is computed from the data.
+
+# Returns
+- `Tuple{AbstractArray, AbstractArray}`: Tuple of the bin centers and the histogram values.
 """
 function histogram(
     array;
