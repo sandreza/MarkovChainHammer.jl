@@ -42,6 +42,6 @@ julia> Pkg.add("https://github.com/sandreza/MarkovChainHammer.jl.git")
 
 ## Contributing 
 
-We follow [Julia conventions](https://docs.julialang.org/en/v1/manual/style-guide/) and recommend reading through [ColPrac](https://docs.sciml.ai/ColPrac/stable/) as a standard guide contributing to Julia Software. New issues and pull requests are welcome!
+We follow [Julia conventions](https://docs.julialang.org/en/v1/manual/style-guide/) and recommend reading through [ColPrac](https://docs.sciml.ai/ColPrac/stable/) as a standard guide for contributing to Julia software. New issues and pull requests are welcome!
 
 
