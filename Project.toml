@@ -4,7 +4,7 @@ authors = ["Andre Souza <andrenogueirasouza@gmail.com>"]
 version = "0.0.3"
 
 [compat]
-julia = "1"
+julia = "1.8"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
