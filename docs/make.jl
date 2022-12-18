@@ -2,8 +2,16 @@ using Documenter
 using MarkovChainHammer
 
 mch_methods = Any[
-    "Home"=>"mch_methods.md",
-    "Markov Chains"=>"basics.md",
+    "Overview"=>"mch_methods.md",
+    "Basics"=> "basics.md",
+]
+
+module_overview = Any[
+    "Overview"=>"module_overview.md",
+    "TransitionMatrix" => "transition_matrix.md",
+    "Trajectory" => "trajectory.md",
+    "Clustering" => "clustering.md",
+    "Utils" => "utils.md",
 ]
 
 makedocs(
@@ -12,6 +20,7 @@ makedocs(
     pages=[
         "Home" => "index.md",
         "Markov Chains" => mch_methods,
+        "Modules" => module_overview,
         "Function Index" => "function_index.md",
     ],
     modules=[MarkovChainHammer]

@@ -1,4 +1,5 @@
 using LinearAlgebra
+
 function steady_state(Q)
     Λ, V = eigen(Q)
     return real(V[:, end] ./ sum(V[:,end]))
