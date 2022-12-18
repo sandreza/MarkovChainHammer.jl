@@ -6,7 +6,7 @@ function histogram(
     custom_range=false
 )
 # Description 
-- Utility function for barplots in GLMakie 
+    Utility function for barplot in GLMakie 
 # Arguments 
 - array; one dimensional sequence of numbers 
 # Keyword Arguments 
