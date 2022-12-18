@@ -26,7 +26,7 @@ The first column, ``c_1``,
 \end{aligned}
 ```
 
-gives information about what happens to a link in the chain that is state 1. The probability, ``\mathcal{M}_{11}``, of staying in state 1 given that we are in state 1 is ``\mathcal{M}_{11} = 0.6`` and the probability of going to state 2 given that we are in state 1 is ``\mathcal{M}_{11} = 0.4``. Similarly, the second column, ``c_2``,
+gives information about what happens to a link in the chain that is state 1. The probability, ``\mathcal{M}_{11}``, of staying in state 1 given that we are in state 1 is ``\mathcal{M}_{11} = 0.6`` and the probability of going to state 2 given that we are in state 1 is ``\mathcal{M}_{21} = 0.4``. Similarly, the second column, ``c_2``,
 
 ```math
 \begin{aligned}
@@ -38,7 +38,7 @@ gives information about what happens to a link in the chain that is state 1. The
 \end{aligned}
 ```
 
-gives information about what happens to a link in the chain that is state 2. The probability, ``\mathcal{M}_{22}``, of staying in state 2 given that we are in state 2 is ``\mathcal{M}_{22} = 0.7`` and the probability of going to state 1 given that we are in state 2 is ``\mathcal{M}_{21} = 0.3``. 
+gives information about what happens to a link in the chain that is state 2. The probability, ``\mathcal{M}_{22}``, of staying in state 2 given that we are in state 2 is ``\mathcal{M}_{22} = 0.7`` and the probability of going to state 1 given that we are in state 2 is ``\mathcal{M}_{12} = 0.3``. 
 
 A sample markov chain is constructed from a transfer operator using *generate* function from the *MarkovChainHammer.Trajectory* module. The following code snippet constructs 10 steps of a Markov chain from the transfer operator ``\mathcal{M}`` above.
 
