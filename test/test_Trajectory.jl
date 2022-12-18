@@ -47,3 +47,16 @@ end
     @test(default_size >= length(generate(100 * Q)))
     @test(2 == length(generate(0 * Q)))
 end
+
+
+@testset "Holding Times" begin
+    markov_chain = Int.([ones(5); ones(4) * 2; ones(2)])
+    markov_chain_holding_times = holding_times(markov_chain)
+    @test all(markov_chain_holding_times[1] .== [5, 2])
+    @test all(markov_chain_holding_times[2] .== 4)
+
+    markov_chain_holding_times = holding_times(markov_chain; dt=3.0)
+
+    @test all(markov_chain_holding_times[1] .== [15.0, 6.0])
+    @test all(markov_chain_holding_times[2] .== 12.0)
+end
