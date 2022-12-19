@@ -1,0 +1,1 @@
+# [Convergence of Generators](@id sec:generator_convergence)

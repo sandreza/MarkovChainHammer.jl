@@ -13,5 +13,6 @@ The following sections contain more advanced mathematical concepts using continu
 0. [Generators and Markov Chains](@ref sec:generators): Create a Markov chain from a generator matrix
 0. [Data-driven Generator](@ref sec:empirical_generator): Construct empirical generators from a Markov Chain
 0. [Holding Times](@ref sec:holding_times): Compute the empirical holding times of a Markov Chain
+0. [Convergence of Generators](@ref sec:generator_convergence): Verify convergence of empirical generators to the true generator
 
 
