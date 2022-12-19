@@ -1,6 +1,6 @@
-# [Basics](@id sec:basics)
+# [Transfer Operators and Markov Chains](@id sec:transfer_operators)
 
-Markov chains are a stochastic process whose future state only depends on the current state. In this repository we only consider Markov chains with a finite state space, thus the transition probabilities are characterized by matrix. 
+Markov chains are a stochastic process whose future state only depends on the current state. In this repository we only consider Markov chains with a finite state space, thus the transition probabilities are characterized by matrix. In this section we will see how to generate a Markov chain from a known transition matrix.
 
 The **convention** taken in this repository is that all transfer operators are column stochastic. For example, the following ``2 \times 2``  [column stochastic matrix](https://en.wikipedia.org/wiki/Stochastic_matrix) characterizes a Markov chain made up of 2 discrete states,
 
@@ -63,6 +63,3 @@ If the number of steps is not specified, then the code attempts to generated a c
 ```@example generate_chain
 markov_chain = generate(ℳ)'
 ```
-
-Here we see that a large chain was generated.
-

@@ -1,0 +1,1 @@
+# [Empirical Generator](@id sec:empirical_generator)

@@ -1,17 +1,24 @@
 using Documenter
 using MarkovChainHammer
 
-mch_methods = Any[
-    "Overview"=>"mch_methods.md",
-    "Basics"=> "basics.md",
+api_dir = "API/"
+dt_dir = "Discrete Time/"
+ct_dir = "Continuous Time/"
+
+api = Any[
+    "Overview"=> api_dir * "overview.md",
+    "Discrete Time"=> (api_dir * dt_dir) .* ["transfer_operators.md", "empirical_transfer_operators.md", "convergence.md"],
+    "Continous Time" => (api_dir * ct_dir) .* ["generators.md", "empirical_generator.md", "holding_times.md"],
 ]
 
-module_overview = Any[
-    "Overview"=>"module_overview.md",
-    "TransitionMatrix" => "transition_matrix.md",
-    "Trajectory" => "trajectory.md",
-    "Clustering" => "clustering.md",
-    "Utils" => "utils.md",
+
+mod_dir = "Modules/"
+modules = Any[
+    "Overview"=> mod_dir * "module_overview.md",
+    "TransitionMatrix" => mod_dir * "transition_matrix.md",
+    "Trajectory" => mod_dir * "trajectory.md",
+    "Clustering" => mod_dir * "clustering.md",
+    "Utils" => mod_dir * "utils.md",
 ]
 
 makedocs(
@@ -19,8 +26,8 @@ makedocs(
     format=Documenter.HTML(collapselevel=1),
     pages=[
         "Home" => "index.md",
-        "Markov Chains" => mch_methods,
-        "Modules" => module_overview,
+        "API" => api,
+        "Modules" => modules,
         "Function Index" => "function_index.md",
     ],
     modules=[MarkovChainHammer]
