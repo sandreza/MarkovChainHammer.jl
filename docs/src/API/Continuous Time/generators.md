@@ -120,7 +120,7 @@ using MarkovChainHammer.Trajectory: generate
 markov_chain = generate(P1, 10)'
 ```
 
-The second possibility is to use the generator directly. This is done by defining a generator ``Q``, choosing a step size ``dt``, and then using the ``generate`` function with the generator 
+The second possibility is to use the generator directly. This is done by defining a generator ``Q``, choosing a step size ``dt``, and then using the `generate` function with the generator 
 
 ```@example generator2
 n = 10; dt = 1.0;
@@ -147,3 +147,92 @@ time = dt * collect(0:n-1)'
 
 The flexibility of choosing the step size corresponding to a time, and still having the resulting process be [Markovian](https://en.wikipedia.org/wiki/Markov_property), is a powerful feature of the generator. Choosing an arbitrary ``dt`` but having the statistics remain the same over a physical timescale is what makes the resulting process a "continuous time markov process".
 
+## Generator properties
+
+In the previous section we introduced the generator, but we did not delve into details about it's properties or how to interpret the entries of the matrix. This subsection aims to rectify that. We start by interpreting the diagonal entries of the generator matrix and then we will move to interpret the off-diagonal entries. We will soon see that 
+
+0. The diagonal entries contain information on how much time to spend in a state 
+0. The off-diagonal entries contain information on how to transition between states
+
+We comment that the generator matrix has units of inverse time whereas the transfer operator is dimensionless. Throughout this section we will use the notation ``Q`` to denote the generator matrix and ``Q_{ij}`` to denote the entry in the ``i``th row and ``j``th column of the matrix.
+
+### Diagonal entries
+
+The diagonal entries are used to compute the [holding times](https://en.wikipedia.org/wiki/Continuous-time_Markov_chain) associated with states of the markov process. The holding time is an exponentially distributed random variable with mean ``-\frac{1}{Q_{ii}}``. The mean is the inverse of the diagonal entry.
+
+For example, the generator matrix 
+
+```@example generator2
+Q = [-1 1 1; 1 -2 2; 0 1 -3]
+```
+has three states, ``1, 2, 3``. The holding time for state ``1`` is exponentially distributed with mean ``-\frac{1}{Q_{11}} = \frac{1}{1} = 1``. The holding time for state ``i = 2`` is exponentially distributed with mean ``-\frac{1}{Q_{22}} = \frac{1}{2} = 0.5``. The holding time for state ``i = 3`` is exponentially distributed with mean ``-\frac{1}{Q_{33}} = \frac{1}{3} = 0.3333``. Thus the larger the number on the diagonal the less time it spends in that state.
+
+
+ We can draw a random sample from the holding time distribution using the `rand` function and the `Exponential` struct from the `Distributions` package. For example, to draw a random sample from the holding time distribution for state ``1`` we can use the following code
+
+```@example generator2
+using Distributions
+τ₁ = Exponential(-1 / Q[1,1])
+rand(τ₁)
+```
+and if we want to draw another sample from the distribution, we simply call the function again, 
+
+```@example generator2
+rand(τ₁)
+```
+and if we want to draw 10 realizations 
+
+```@example generator2
+rand(τ₁, 10)'
+```
+and so forth.
+
+To draw a random sample from the holding time distribution for state ``2`` we can use the following code
+
+```@example generator2
+τ₂ = Exponential(-1 / Q[2,2])
+rand(τ₂)
+```
+and to draw a random sample from the holding time distribution for state ``3`` we can use the following code
+```@example generator2
+τ₃ = Exponential(-1 / Q[3,3])
+rand(τ₃)
+```
+
+Thus we have seen how to remain in a state for a random amount of time. The next step is to move from one state to another.
+
+### Off-diagonal entries
+
+The diagonal entries told us how long to stay in a state. The off-diagonal entries tell us how to transition between states. For example, using the same ``3 \times 3`` generator matrix from before
+
+```@example generator2
+Q = [-1 1 1; 1 -2 2; 0 1 -3]
+```
+
+we now describe the transition process from one state to another. Suppose that we start in state 2. We see by examning the column 
+
+```@example generator2
+Q[:,2]
+```
+
+That we spend an exponentially distributed random amount of time with mean ``1/2`` in state 2, then leave the state. Thus the question becomes, "to which state do we go and with what probability?". There are two possibilities since we have a 3 state system. We can leave to state 1 or state 3. The probability of leaving to state 1 is proportional to the ``Q_{12}`` entry of the matrix and the probability of leaving to state 3 is proportional to the ``Q_{32}`` entry. That is to say, we are equally likely to leave to state 1 or state 3. The normalization factor is the sum of the two entries. Thus the probability of leaving to state 1 is ``\frac{Q_{12}}{Q_{12} + Q_{32}} = \frac{1}{2}`` and the probability of leaving to state 3 is ``\frac{Q_{32}}{Q_{12} + Q_{32}} = \frac{1}{2}``. 
+
+A similar story holds for the other states. For example, if we start in state 1, we see by examning the column 
+
+```@example generator2
+Q[:, 1]
+```
+
+that we spend an exponentially distributed random amount of time with mean ``1`` in state 1, then leave the state. Thus the question becomes, "to which state do we go and with what probability?". There are two possibilities since we have a 3 state system. We can leave to state 2 or state 3. The probability of leaving to state 2 is proportional to the ``Q_{21}`` entry of the matrix and the probability of leaving to state 3 is proportional to the ``Q_{31}`` entry. Since ``Q_{31} = 0`` we are 100% likely to leave to state 2. Thus the probability of leaving to state 2 is ``\frac{Q_{21}}{Q_{21} + Q_{31}} = 1`` and the probability of leaving to state 3 is ``\frac{Q_{31}}{Q_{21} + Q_{31}} = 0``.
+
+And finally if we start in state 3, we see by examning the column 
+
+```@example generator2
+Q[:, 3]
+```
+
+that we spend an exponentially distributed random amount of time with mean ``1/3`` in state 3, then leave the state. Thus the question becomes, "to which state do we go and with what probability?". There are two possibilities since we have a 3 state system. We can leave to state 1 or state 2. The probability of leaving to state 1 is proportional to the ``Q_{13}`` entry of the matrix and the probability of leaving to state 2 is proportional to the ``Q_{23}`` entry. Since ``Q_{13} = 1`` and ``Q_{23} = 2`` we are twice as likely to leave to state 2. Thus the probability of leaving to state 1 is ``\frac{Q_{13}}{Q_{13} + Q_{23}} = 1/3`` and the probability of leaving to state 2 is ``\frac{Q_{23}}{Q_{13} + Q_{23}} = 2/3``.
+
+### Final Comments
+
+We have described two methods of simulating a continuous time markov chain. The first method is to construct a transfer operator and then sample at discrete times. The second method is to construct a generator and then sample at continuous times. The two methods are equivalent. The first method is better for working with evenly spaced times, but can suffer from sampling problems if a timestep is chosen "too far in the future" since any short time information is lost. The second method is more true to the continuum nature of a continuous time markov process but suffers from the fact that the time between samples is not evenly spaced.
