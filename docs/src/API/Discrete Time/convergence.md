@@ -44,8 +44,11 @@ for i in 1:6
     n = 10^i
     markov_chain_local = generate(ℳ_exact, n)
     ℳ_empirical_local = perron_frobenius(markov_chain_local)
-    println("A chain of size 10^$i yields an empirical error of $(norm(ℳ_empirical_local - ℳ_exact))")
+    empirical_error = norm(ℳ_empirical_local - ℳ_exact)
+    println("A chain of size 10^$i yields an empirical error of $(empirical_error)")
 end
 ```
 
-We see that the error in the empirical estimate decreases as the chain size increases. 
+We see that the error in the empirical estimate decreases as the chain size increases.
+
+Here we used knowledge of the exact operator to show that the operator converges. If we only have the data, as is often the case in practice, then we cannot know if the empirical operator is sufficiently well-estimated; however, sometimes we know particular abstract properties of the Markov chain which imply theoretical gaurantees on the convergence of the empirical operator in the limit of infinite data. On the other end, given a finite time-series, we can view the operator as a compression algorithm for the stochastic process in which case we only look for data-consistency.  
