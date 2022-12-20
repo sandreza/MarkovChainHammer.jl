@@ -38,13 +38,13 @@ But now suppose that we don't want to compute at just integer steps, we want to 
 ```
 where the log and exp functions are the [matrix logarithm](https://en.wikipedia.org/wiki/Logarithm_of_a_matrix#:~:text=In%20mathematics%2C%20a%20logarithm%20of,function%20of%20the%20matrix%20exponential.) and [matrix exponential](https://en.wikipedia.org/wiki/Matrix_exponential). For example, the matrix logarithm of ``\mathcal{M}`` is
 ```@example generator
-log(ℳ)
-real.(log(ℳ)) #hide
+logℳ = log(ℳ)
+logℳ = real.(log(ℳ)) #hide
 ``` 
 
 and we can check 
 ```@example generator
-exp(real.(log(ℳ))) - ℳ
+exp(logℳ) - ℳ
 real.(exp(real.(log(ℳ))) - ℳ) # hide
 ``` 
 We see that the mathematical relation holds to [machine precision](https://en.wikipedia.org/wiki/Machine_epsilon).
@@ -80,6 +80,7 @@ However, we have actually presented the relation backwards! The transfer operato
 
 ```@example generator
 P(τ) = exp(Q * τ)
+nothing # hide
 ``` 
 
 In order for the formula to hold for all times ``\tau``, stricter requirements must be imposed on the generator. In order for ``P(\tau)`` to be a probability for all times ``\tau``, we require 
@@ -103,6 +104,7 @@ using Random #hide
 Random.seed!(1234) #hide
 Q = [-1.0 2.0; 1.0 -2.0]
 P(τ) = exp(Q * τ)
+nothing #hide
 ```
 
 We can define the ``\tau = 1``, transfer operator 
@@ -114,6 +116,7 @@ P1 = P(1.0)
 and then use the generate function as before, 
     
 ```@example generator2
+using MarkovChainHammer.Trajectory: generate
 markov_chain = generate(P1, 10)'
 ```
 
@@ -126,7 +129,7 @@ markov_chain = generate(Q, n; dt = dt)'
 
 The above is a chain of length 10, whose time intervals correspond to steps of size ``dt = 1.0``. The ``dt`` term is a keyword argument to the function and associated with a step size. Thus time "time" associated with the chain is, 
 ```@example generator2
-time = collect(0:n-1) * dt'
+time = dt * collect(0:n-1)'
 ```
 
 We can also generate a markov chain sequence of length ``n=100`` with a step size ``dt = 0.1`` and then use the ``generate`` function to generate a chain of length ``n`` with a step size ``dt``. 
@@ -139,7 +142,7 @@ markov_chain = generate(Q, n; dt = dt)'
 where now the times associated with the process are 
 
 ```@example generator2
-time = collect(0:n-1) * dt'
+time = dt * collect(0:n-1)'
 ```
 
 The flexibility of choosing the step size corresponding to a time, and still having the resulting process be [Markovian](https://en.wikipedia.org/wiki/Markov_property), is a powerful feature of the generator. Choosing an arbitrary ``dt`` but having the statistics remain the same over a physical timescale is what makes the resulting process a "continuous time markov process".

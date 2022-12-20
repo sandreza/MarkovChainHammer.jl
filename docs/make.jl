@@ -8,7 +8,7 @@ ct_dir = "Continuous Time/"
 api = Any[
     "Overview"=> api_dir * "overview.md",
     "Discrete Time"=> (api_dir * dt_dir) .* ["transfer_operators.md", "empirical_transfer_operators.md", "convergence.md"],
-    "Continuous Time" => (api_dir * ct_dir) .* ["generators.md", "empirical_generator.md", "holding_times.md", "convergence.md"],
+    "Continuous Time" => (api_dir * ct_dir) .* ["generators.md", "holding_times.md", "empirical_generator.md",  "convergence.md"],
 ]
 
 
