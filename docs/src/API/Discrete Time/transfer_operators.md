@@ -1,6 +1,6 @@
 # [Transfer Operators and Markov Chains](@id sec:transfer_operators)
 
-Markov chains are a stochastic process whose future state only depends on the current state. In this repository we only consider Markov chains with a finite state space, thus the transition probabilities are characterized by matrix. In this section we will see how to generate a Markov chain from a known transition matrix.
+Markov chains are a stochastic process whose future state only depends on the current state. In this repository we only consider Markov chains with a finite state space, thus the transition probabilities are characterized by matrix. In this section we will see how to generate a Markov chain from a known transition matrix. The transition matrix is also known as the transfer operator or the Perron-Frobenius matrix / operator. It can also be viewed as the adjoint of the [Koopman operator](https://en.wikipedia.org/wiki/Composition_operator).
 
 The **convention** taken in this repository is that all transfer operators are column stochastic. For example, the following ``2 \times 2``  [column stochastic matrix](https://en.wikipedia.org/wiki/Stochastic_matrix) characterizes a Markov chain made up of 2 discrete states,
 
@@ -44,8 +44,8 @@ A sample markov chain is constructed from a transfer operator using *generate* f
 
 ```@example generate_chain
 using MarkovChainHammer.Trajectory: generate
-using Random
-Random.seed!(1234)
+using Random #hide
+Random.seed!(1234) #hide
 ℳ = [0.6 0.3; 0.4 0.7]
 steps = 10
 markov_chain = generate(ℳ, steps)'
