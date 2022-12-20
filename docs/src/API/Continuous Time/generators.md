@@ -28,7 +28,7 @@ To get that 48% of our states ended up in state 1 and 52% of our states ended up
 ℳ * ℳ * s₀
 ```
 
-Thus we see if we want to move one step, we just multiply ```s_0``` by ```ℳ```, if we want to move two steps we multiply by, ```ℳ^2```. In general, if we want to move ```n```-steps, where ```n``` is a natural number, then we mulitply by ```ℳ^n```. If we want to move "0" steps, we can use the convection that ```ℳ^0``` is the identity matrix.
+Thus we see if we want to move one step, we just multiply ```s_0``` by ```ℳ```, if we want to move two steps we multiply by, ```ℳ^2```. In general, if we want to move ```n```-steps, where ```n``` is a natural number, then we mulitply by ```ℳ^n```. If we want to move "0" steps, we can use the convention that ```ℳ^0``` is the identity matrix.
 
 But now suppose that we don't want to compute at just integer steps, we want to compute what "happens in between", that is to say, raise to a non-integer power. One way to define this for matrices is to make use of the identity
 ```
