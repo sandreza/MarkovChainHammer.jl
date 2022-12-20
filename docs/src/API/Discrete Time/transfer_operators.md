@@ -51,6 +51,7 @@ steps = 10
 markov_chain = generate(ℳ, steps)'
 ```
 
+The sequence of numbers are the Markov chain. A number 1 indicates that the chain is in state 1 and a number 2 indicates that the chain is in state 2 and the sequence of numbers is the sequence of states that the chain has visited.
 The Markov chain is but one possible realization of the stochastic process. If we were to run the generate function again, we would get a different realization of the Markov chain,
 
 ```@example generate_chain
