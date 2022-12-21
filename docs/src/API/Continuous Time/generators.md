@@ -36,7 +36,7 @@ But now suppose that we don't want to compute at just integer steps, we want to 
 ```math
 \mathcal{M}^n = \exp[n \log(\mathcal{M})]
 ```
-where the log and exp functions are the [matrix logarithm](https://en.wikipedia.org/wiki/Logarithm_of_a_matrix#:~:text=In%20mathematics%2C%20a%20logarithm%20of,function%20of%20the%20matrix%20exponential.) and [matrix exponential](https://en.wikipedia.org/wiki/Matrix_exponential). For example, the matrix logarithm of ``\mathcal{M}`` is
+where the [log and exp functions](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/) are the [matrix logarithm](https://en.wikipedia.org/wiki/Logarithm_of_a_matrix#:~:text=In%20mathematics%2C%20a%20logarithm%20of,function%20of%20the%20matrix%20exponential.) and [matrix exponential](https://en.wikipedia.org/wiki/Matrix_exponential). For example, the matrix logarithm of ``\mathcal{M}`` is
 ```@example generator
 logℳ = log(ℳ)
 logℳ = real.(log(ℳ)) #hide
