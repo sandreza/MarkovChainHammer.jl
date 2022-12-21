@@ -40,7 +40,7 @@ Let us now automate the process of checking convergence. We generate a Markov ch
 
 ```@example transfer_operator_convergence
 using LinearAlgebra: norm
-for i in 1:6
+for i in 2:2:6
     n = 10^i
     markov_chain_local = generate(ℳ_exact, n)
     ℳ_empirical_local = perron_frobenius(markov_chain_local)

@@ -23,6 +23,7 @@ This matrix is constructed by counting the amount of time spent in a state to co
 using MarkovChainHammer.TransitionMatrix: holding_times
 state_holding_times = holding_times(markov_chain, 3; dt = dt)
 ```
+
 The first argument to the function is the markov_chain, the second argument is the total number of states, and the keyword argument is the time step size associated with the entries of the markov_chain.
 
 We see, from the markov chain, that state 1 spends 2 time units in state 1, followed by 1 time unit, then follow by 2 time units. State 2 spends 3 time units repeating itself, then two time units. And lastly, state 3 is only observed once for one time unit.
@@ -52,7 +53,7 @@ Q2  = generator(markov_chain; dt = 2.0)
 Q1 - 2.0 * Q2 
 ```
 
-As a last comment we mention that one can also construct the transfer operator, then take the matrix logarithm, and then divide by ``dt`` to get another estimate of the generator; however, the resulting matrix no longer has an "infinitesimal" probabilistic interpretation, as the following example
+As a last comment we mention that one can also construct the transfer operator, then take the matrix logarithm, and then divide by ``dt`` to get another estimate of the generator; however, the resulting matrix no longer has an "infinitesimal" probabilistic interpretation, as the following example shows
 
 ```@example datadriven2 
 using MarkovChainHammer.TransitionMatrix: perron_frobenius
@@ -61,4 +62,5 @@ dt = 1.0
 log(ℳ) / dt
 ```
 
-The columns still sum to zero, but the entries of the matrix no longer have an interpretation as holding times or probabilities. This example also shows why generators have a much more limited and special structure as compared to the transfer operator. The requirement that one generates probabilities over infinitesimal steps imposes severe restrictions. 
+The columns still sum to zero, but the entries of the matrix no longer have an interpretation as holding times or probabilities. This example also shows why generators have a much more limited and special structure as compared to the transfer operator. The requirement that one generates probabilities over infinitesimal steps imposes severe restrictions. We may lift these restrictions if we are willing to give up computing an infinitesimal generator and live with generators that are applicable only over a finite timescale. This fact reflects a well-known theorem in numerical analysis that positivity preserving linear operators are inherently lower-order. 
+

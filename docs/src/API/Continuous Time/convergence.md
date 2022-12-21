@@ -55,33 +55,51 @@ log(perron_frobenius(markov_chain)) / dt
 ```
 
 
-Let us now automate the process of checking convergence as function of fixed timestep size. We generate a Markov chain of increasing size and compute the empirical transition matrix. We then verify that the empirical transition matrix converges to the exact transition operator. We use the function `norm` from the `LinearAlgebra` package to compute the norm of the difference between the empirical and exact transition matrices.
+Let us now automate the process of checking convergence as function of fixed timestep size. We generate a Markov chain of increasing size and compute the empirical transition matrix. We then verify that the empirical transition matrix converges to the exact transition operator. We use the function `norm` from the `LinearAlgebra` package to compute the norm of the difference between the empirical and exact transition matrices. We use the difference between the matrices divided by the norm of the exact matrix to get a relative error. At small timesteps the transfer operator converges to the identity matrix, hence we divide the error by a factor of ``dt`` in order to make a fair comparison to the relative error of the generator matrix. The takeaway message is that the error of the generator is bounded by both the timestep size and the available number of independent samples in the data. Here is the code to verify this statement
 
 ```@example generator_convergence
 using LinearAlgebra: norm
-for dt in [1.0, 0.1, 0.01]
-    ℳ_exact = exp(Q_exact * dt)
+println("Transfer Operator Convergence")
+for dt in [1.0, 0.1, 0.01, 0.001]
+    ℳ_exact_local = exp(Q_exact * dt)
+    println("For a timestep of $dt")
     for i in 2:2:6
         n = 10^i
-        markov_chain_local = generate(ℳ_exact, n)
-        ℳ_empirical_local = perron_frobenius(markov_chain_local)
-        empirical_error = norm(ℳ_empirical_local - ℳ_exact) / norm(ℳ_exact)
-        println("A chain of size 10^$i with timestep $dt yields a relative empirical error of $(empirical_error) for the transfer operator")
+        markov_chain_local = generate(ℳ_exact_local, n)
+        number_of_states = 2
+        ℳ_empirical_local = perron_frobenius(markov_chain_local, number_of_states)
+        empirical_error = norm(ℳ_empirical_local - ℳ_exact_local) / norm(ℳ_exact_local) / dt
+        println("A chain of size 10^$i yields a relative empirical error of $(empirical_error)")
     end
     println("---------------------------")
 end
 
-for dt in [1.0, 0.1, 0.01]
-    ℳ_exact = exp(Q_exact * dt)
+println("---------------------------")
+println("Generator Convergence")
+for dt in [1.0, 0.1, 0.01, 0.001]
+    ℳ_exact_local = exp(Q_exact * dt)
+    println("For a timestep of $dt")
     for i in 2:2:6
         n = 10^i
-        markov_chain_local = generate(ℳ_exact, n)
-        Q_empirical_local = generator(markov_chain_local; dt)
+        markov_chain_local = generate(ℳ_exact_local, n)
+        number_of_states = 2
+        Q_empirical_local = generator(markov_chain_local, number_of_states; dt = dt)
         empirical_error = norm(Q_empirical_local - Q_exact) / norm(Q_exact)
-        println("A chain of size 10^$i with timestep $dt yields a relative empirical error of $(empirical_error) for the generator")
+        println("A chain of size 10^$i yields a relative empirical error of $(empirical_error)")
     end
     println("---------------------------")
 end
 ```
 
-The takeaway message in the present context is that the error of the generator is bounded by both the timestep size and the available number of independent samples in the data. 
+In particular, for the convergence of the generator, we see that the error is roughly on the order of the timestep size, except for the last case. A heuristic explanation for this behavior is as follows. If we think of each entry of the matrix as a random variable then the convergence to the expected value (the exact entry of the matrix) is inversely proportional to the square root of the number of independent samples. As one decreases the timestep size, the number of independent samples decrease since the number of timesteps is fixed, that is to say we are looking at the simulation for an increasingly shorter amount of physical time. Roughly speaking one would expect the error to be 
+
+```math
+error \propto \max \left(dt, \frac{1}{\sqrt{S}}  \right)
+```
+
+where ``S`` is the number of independent samples. In the last case, since the largest decorrelation time of the markov chain is on the order of 1 time unit, we expect the number of independent samples in a physical time interval of ``10^6  dt = 10^3`` to be roughly on the order of ``10^3 / 5``, where 5 time units is taken as a decorrelation threshold for the markov chain. We see that the error is 
+```@example generator_convergence
+approximate_error = 1 / sqrt(10^3 / 5)
+```
+which is roughly the same order of magnitude as the final error.
+

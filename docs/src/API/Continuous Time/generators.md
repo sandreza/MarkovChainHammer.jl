@@ -91,7 +91,7 @@ These two requirements can be derived by taking ``\tau`` to be an infinitely sma
 ```math
 P(dt) = \mathbb{I} + Q  dt
 ```
-where ``\mathbb{I}`` is the identity matrix. Since the sum of the columns on the left hand side must be one and the sum of the columns of the identity matrix is one, we see that the only option is for the sum of the columns of ``Q`` to be zero for the identity to hold. The positivity of the off-diagonal terms of the transfer operator implies that the off-diagonal terms of the generator matrix, ``Q`` must be positive since the formula holds for every entry of the matrix and the identity matrix only modifies the diagonal terms. In fact we can say a bit more. Since probabilities are bounded above by one, we can say that the off-diagonal terms of the generator matrix must be less than or equal to zero.
+where ``\mathbb{I}`` is the identity matrix. Since the sum of the columns on the left hand side must be one and the sum of the columns of the identity matrix is one, we see that the only option is for the sum of the columns of ``Q`` to be zero for the identity to hold. The positivity of the off-diagonal terms of the transfer operator implies that the off-diagonal terms of the generator matrix, ``Q`` must be positive since the formula holds for every entry of the matrix and the identity matrix only modifies the diagonal terms. In fact we can say a bit more. Since probabilities are bounded above by one, we can say that the diagonal terms of the generator matrix must be less than or equal to zero.
 
 ## Using the generator to contruct Markov chains
 
@@ -235,4 +235,4 @@ that we spend an exponentially distributed random amount of time with mean ``1/3
 
 ### Final Comments
 
-We have described two methods of simulating a continuous time markov chain. The first method is to construct a transfer operator and then sample at discrete times. The second method is to construct a generator and then sample at continuous times. The two methods are equivalent. The first method is better for working with evenly spaced times, but can suffer from sampling problems if a timestep is chosen "too far in the future" since any short time information is lost. The second method is more true to the continuum nature of a continuous time markov process but suffers from the fact that the time between samples is not evenly spaced.
+We have described two methods of simulating a continuous time markov chain. The first method is to construct a transfer operator and then sample at discrete times. The second method is to construct a generator and then sample at continuous times. The two methods are equivalent. The first method is better for working with evenly spaced times, but can suffer from sampling problems if a timestep is chosen "too far in the future" since any short time information is lost. The second method is more true to the continuum nature of a continuous time markov process but suffers from unevenly spaced times. 
