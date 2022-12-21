@@ -40,7 +40,7 @@ We can verify the off diagonal terms as well. We just need to track the number o
 Q[:, 1]
 ```
 
-For the other two states we observe that we only see state 2 transitioning to state 1 and state 3 only ever transitions to state 1, thus the matrix entries are ``Q_{32} = Q_{23} = 0``. The requirement that the columns must sum to then determins the other entries (or noticing that the probability of going to state 1 after having left state 2 is 1 and similarly for state 3).
+For the other two states we observe that we only see state 2 transitioning to state 1 and state 3 only ever transitions to state 1, thus the matrix entries are ``Q_{32} = Q_{23} = 0``. The requirement that the columns must sum to zero then determines the other entries (or noticing that the probability of going to state 1 after having left state 2 is 1 and similarly for state 3).
 
 This brings us to our first warning about constructing the empirical generator. It is most meaningful when there is enough timeseries data to stay within a given state for more than one "timestep". 
 
