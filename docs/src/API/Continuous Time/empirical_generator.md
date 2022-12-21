@@ -61,4 +61,4 @@ dt = 1.0
 log(ℳ) / dt
 ```
 
-The columns still sum to zero, but the entries of the matrix no longer have an interpretation as holding times or probabilities. This example also shows why generators have a much more limited and special structure as compared to the transfer operator.
+The columns still sum to zero, but the entries of the matrix no longer have an interpretation as holding times or probabilities. This example also shows why generators have a much more limited and special structure as compared to the transfer operator. The requirement that one generates probabilities over infinitesimal steps imposes severe restrictions. 
