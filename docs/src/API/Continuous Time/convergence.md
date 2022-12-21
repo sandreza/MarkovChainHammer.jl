@@ -103,3 +103,5 @@ approximate_error = 1 / sqrt(10^3 / 5)
 ```
 which is roughly the same order of magnitude as the final error.
 
+We haven't discussed what happens as the number of states increases and the more nuanced behavior of both the generator matrix and transfer operator as the number of states increases. In general, the more states that one has the more data is needed to estimate the different entries of the matrix; however this need not always be the case, as there are some interesting exceptions to this rule. In particular if there is an underlying (or approximate) tensor product structure to the generator or transfer operator then the number of independent samples needed to estimate the entries of the matrix can be reduced. 
+
