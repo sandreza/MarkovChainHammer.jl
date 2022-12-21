@@ -1,8 +1,8 @@
-# [Basics](@id sec:basics)
+# [Transfer Operators and Markov Chains](@id sec:transfer_operators)
 
-Markov chains are a stochastic process whose future state only depends on the current state. In this repository we only consider Markov chains with a finite state space, thus the transition probabilities are characterized by matrix. 
+Markov chains are a stochastic process whose future state only depends on the current state. In this repository we only consider Markov chains with a finite state space, thus the transition probabilities are characterized by matrix. In this section we will see how to generate a Markov chain from a known transition matrix. The transition matrix is also known as the transfer operator or the Perron-Frobenius matrix / operator. It can also be viewed as the adjoint of the [Koopman operator](https://en.wikipedia.org/wiki/Composition_operator).
 
-The **convention** taken in this repository is that all transfer operators are column stochastic. For example, the following ``2 \times 2``  [column stochastic matrix](https://en.wikipedia.org/wiki/Stochastic_matrix) characterizes a Markov chain made up of 2 discrete states,
+The **convention** taken in this repository is that all transfer operators are column stochastic. For example, the following ``2 \times 2``  [column stochastic matrix](https://en.wikipedia.org/wiki/Stochastic_matrix) characterizes a Markov process made up of 2 discrete states,
 
 ```math
 \begin{aligned}
@@ -44,13 +44,14 @@ A sample markov chain is constructed from a transfer operator using *generate* f
 
 ```@example generate_chain
 using MarkovChainHammer.Trajectory: generate
-using Random
-Random.seed!(1234)
+using Random #hide
+Random.seed!(1234) #hide
 ℳ = [0.6 0.3; 0.4 0.7]
 steps = 10
 markov_chain = generate(ℳ, steps)'
 ```
 
+The sequence of numbers are the Markov chain. A number 1 indicates that the chain is in state 1 and a number 2 indicates that the chain is in state 2 and the sequence of numbers is the sequence of states that the chain has visited.
 The Markov chain is but one possible realization of the stochastic process. If we were to run the generate function again, we would get a different realization of the Markov chain,
 
 ```@example generate_chain
@@ -63,6 +64,3 @@ If the number of steps is not specified, then the code attempts to generated a c
 ```@example generate_chain
 markov_chain = generate(ℳ)'
 ```
-
-Here we see that a large chain was generated.
-
