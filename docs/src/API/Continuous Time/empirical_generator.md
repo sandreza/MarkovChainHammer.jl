@@ -1,6 +1,6 @@
 # [Empirical Generator](@id sec:empirical_generator)
 
-In this section, we will see how to construct a generator from data. This is useful when we don't know the underlying generator. There is an inherent limitation in constructing generators that wasn't present when constructing the transfer operator: The data comes at a fixed timescale, thus the generator will only be known up to the timescales present in the timeseries. Nonetheless it is possible to construct a generator from the timeseries under a few assumptions
+In this section, we will see how to construct a generator from data. This is useful when we don't know the underlying generator. There is an inherent limitation in constructing generators that wasn't present when constructing the transfer operator: The data comes at a fixed timescale, thus the generator will only be known up to the timescales present in the timeseries. Nonetheless it is possible to construct a generator from the timeseries under a few assumptions. 
 
 For example, suppose that we have the Markov chain with three states
 
@@ -51,3 +51,14 @@ Q1 = generator(markov_chain; dt = 1.0)
 Q2  = generator(markov_chain; dt = 2.0)
 Q1 - 2.0 * Q2 
 ```
+
+As a last comment we mention that one can also construct the transfer operator, then take the matrix logarithm, and then divide by ``dt`` to get another estimate of the generator; however, the resulting matrix no longer has an "infinitesimal" probabilistic interpretation, as the following example
+
+```@example datadriven2 
+using MarkovChainHammer.TransitionMatrix: perron_frobenius
+dt = 1.0
+ℳ = perron_frobenius(markov_chain)
+log(ℳ) / dt
+```
+
+The columns still sum to zero, but the entries of the matrix no longer have an interpretation as holding times or probabilities. This example also shows why generators have a much more limited and special structure as compared to the transfer operator.
