@@ -165,7 +165,7 @@ For example, the generator matrix
 ```@example generator2
 Q = [-1 1 1; 1 -2 2; 0 1 -3]
 ```
-has three states, ``1, 2, 3``. The holding time for state ``1`` is exponentially distributed with mean ``-\frac{1}{Q_{11}} = \frac{1}{1} = 1``. The holding time for state ``i = 2`` is exponentially distributed with mean ``-\frac{1}{Q_{22}} = \frac{1}{2} = 0.5``. The holding time for state ``i = 3`` is exponentially distributed with mean ``-\frac{1}{Q_{33}} = \frac{1}{3} = 0.3333``. Thus the larger the number on the diagonal the less time it spends in that state.
+has three states, ``1, 2, 3``. The holding time for state ``1`` is exponentially distributed with mean ``-\frac{1}{Q_{11}} = \frac{1}{1} = 1``. The holding time for state ``i = 2`` is exponentially distributed with mean ``-\frac{1}{Q_{22}} = \frac{1}{2}``. The holding time for state ``i = 3`` is exponentially distributed with mean ``-\frac{1}{Q_{33}} = \frac{1}{3}``. Thus the larger the number on the diagonal the less time it spends in that state.
 
 
  We can draw a random sample from the holding time distribution using the `rand` function and the `Exponential` struct from the `Distributions` package. For example, to draw a random sample from the holding time distribution for state ``1`` we can use the following code

@@ -1,6 +1,6 @@
 # [Data-driven Transfer Operators](@id sec:empirical_transfer_operators)
 
-[Previously](@ref sec:transfer_operators), we have seen how to construct a transfer operator from a Markov chain. In this section, we will see how to construct a transfer operator from data. This is useful when we do not have access to the underlying Markov chain, but we have access to data that we can use to estimate the transfer operator.
+[Previously](@ref sec:transfer_operators), we have seen how to construct a transfer operator from a Markov chain. In this section, we will see how to construct a transfer operator from data. This is useful when we don't know the underlying transfer operator.
 
 For example, suppose that we have the Markov chain
 
