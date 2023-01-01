@@ -30,14 +30,14 @@ By default MarkovChainHammer exports no functions and has modules that
 See the [examples](https://github.com/sandreza/MarkovChainHammer.jl/tree/main/examples) for inspiration on how the utilities can be used.
 ## Installation instructions
 
-MarkovChainHammer is an ***unregistered*** Julia package that requires Julia 1.8+. To install it,
+MarkovChainHammer is a ***registered*** Julia package that requires Julia 1.8. To install it,
 
 1. [Download Julia](https://julialang.org/downloads/).
 2. Launch Julia and type 
 ```julia
 julia> using Pkg
 
-julia> Pkg.add("https://github.com/sandreza/MarkovChainHammer.jl.git")
+julia> Pkg.add("MarkovChainHammer")
 ```
 
 ## Contributing 
