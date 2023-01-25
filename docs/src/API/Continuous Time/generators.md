@@ -13,7 +13,7 @@ To motivate the use of a generator, we reexamine the transfer operator
 ℳ
 ```
 
-The transfer operator determines the probability of state j (here j = 1 or 2) to move to state i in one step. But suppose that we want to know the probability of moving from one state to another in *two* steps. Suppose that we are in state ``s_0`` at time 0. For example, if we were in state 2, then 
+The transfer operator determines the probability of state j (here j = 1 or 2) to move to state i in one step. But suppose that we want to know the probability of moving from one state to another in *two* steps. For example, suppose that we are in state ``s_0 = 1`` at time 0, then
 ```@example generator
 s₀ = [1, 0]
 ```
