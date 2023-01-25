@@ -102,13 +102,19 @@ println("and the eigenvalue of the mean")
 display(Λ_of_mean)
 
 ## 
-print("Although a bit of a heuristic we can check to see if a matrix constructed with more data is within the uncertainty of a matrix constructed with less data")
+println("Although a bit of a heuristic we can check to see if a matrix constructed with more data is within the uncertainty of a matrix constructed with less data")
 
 prior = MarkovChainHammer.BayesianMatrix.uninformative_prior(3)
-Q_small_data = BayesianGenerator(markov_chain1[1:1000]; dt=dt)
+Q_small_data = BayesianGenerator(markov_chain1[1:2000]; dt=dt)
 Q_large_data = BayesianGenerator(markov_chain1; dt=dt)
-println("We see this is true pointwise")
+Q_large_data = BayesianGenerator(markov_chain2, Q_large_data.posterior; dt=dt) 
+# 
+
+println("The mean of the small data generator is ")
 display(mean(Q_small_data) )
+println("The mean of the large data generator is ")
 display(mean(Q_large_data) )
-display(std(Q_small_data) )
-display(abs.(mean(Q_small_data) - mean(Q_large_data)) .< std(Q_small_data))
+println("The 2 standard deviations of the small data matrix is ")
+display(2 * std(Q_small_data) )
+println("We see that the difference is with 2σ of the small data matrix")
+display(abs.(mean(Q_small_data) - mean(Q_large_data)) .< 2*std(Q_small_data))
