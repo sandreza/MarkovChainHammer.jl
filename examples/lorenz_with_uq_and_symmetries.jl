@@ -32,7 +32,7 @@ markov_chain1 = Int64[]
 initial_condition = [14.0, 20.0, 27.0]
 push!(timeseries, initial_condition)
 dt = 1.5586522107162 / 64
-iterations = 64 * 16
+iterations = 64 * 16 * 10
 for i in ProgressBar(2:iterations)
     local state = rk4(lorenz!, timeseries[i-1], dt)
     push!(timeseries, state)
@@ -100,3 +100,15 @@ println("We get different answers for the mean eigenvalue")
 display(Λ̅)
 println("and the eigenvalue of the mean")
 display(Λ_of_mean)
+
+## 
+print("Although a bit of a heuristic we can check to see if a matrix constructed with more data is within the uncertainty of a matrix constructed with less data")
+
+prior = MarkovChainHammer.BayesianMatrix.uninformative_prior(3)
+Q_small_data = BayesianGenerator(markov_chain1[1:1000]; dt=dt)
+Q_large_data = BayesianGenerator(markov_chain1; dt=dt)
+println("We see this is true pointwise")
+display(mean(Q_small_data) )
+display(mean(Q_large_data) )
+display(std(Q_small_data) )
+display(abs.(mean(Q_small_data) - mean(Q_large_data)) .< std(Q_small_data))
