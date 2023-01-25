@@ -27,6 +27,9 @@ using Distributions, Random, Statistics
 
     ΛV = eigen(Q)
     @test ΛV isa Eigen
+    
+    Λ = eigvals(Q)
+    @test Λ isa Vector
 
     ΛVs = eigen_distribution(Q; samples=10)
     @test length(ΛVs[1].values) == 3

@@ -37,7 +37,7 @@ size(Q::BayesianGenerator) = (length(Q.prior.rates), length(Q.prior.rates))
 eigen(Q::GeneratorParameterDistributions) = eigen(mean(Q))
 eigen(Q::BayesianGenerator) = eigen(Q.posterior)
 
-eigvals(Q::GeneratorParameterDistributions) = eigvals(Q)
+eigvals(Q::GeneratorParameterDistributions) = eigvals(mean(Q))
 eigvals(Q::BayesianGenerator) = eigvals(Q.posterior)
 
 eigen_distribution(Q::GeneratorParameterDistributions; samples = 100) = eigen.(rand(Q, samples))
