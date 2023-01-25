@@ -1,4 +1,7 @@
 # Base.Random extensions
+# extend Base
+import Base.rand
+
 function rand(Q::GeneratorParameterDistributions)
     rates = rand.(Q.rates)
     exit_probabilities = rand.(Q.exit_probabilities)
@@ -9,29 +12,35 @@ rand(Q::BayesianGenerator) = rand(Q.posterior)
 rand(Q::GeneratorParameterDistributions, n::Int) = [rand(Q) for i in 1:n]
 rand(Q::BayesianGenerator, n::Int) = [rand(Q) for i in 1:n]
 
-# Base.statistics 
+# Base.Statistics 
+import Statistics.mean, Statistics.var, Statistics.std
 mean(Q::BayesianGenerator) = mean(Q.posterior)
 mean(Q::GeneratorParameterDistributions) = construct_generator(mean.(Q.rates), mean.(Q.exit_probabilities))
 
-function var(Q::GeneratorParameterDistributions) 
+function var(Q::GeneratorParameterDistributions)
     number_of_states = length(Q.rates)
     varQ = zeros(number_of_states, number_of_states)
     rates = Q.rates
     exit_probabilities = Q.exit_probabilities
-    [varQ[i,i] = var(rates[i]) for i in eachindex(rates)]
+    [varQ[i, i] = var(rates[i]) for i in eachindex(rates)]
     for i in 1:number_of_states
         # variance of product of two independent random variables
         σ₁² = var(rates[i])
         σ₂² = var(exit_probabilities[i])
         μ₁ = mean(rates[i])
         μ₂ = mean(exit_probabilities[i])
-        varQ[[1:i-1..., i+1:number_of_states...], i] .= σ₁² * μ₂ .^2 + σ₂² * μ₁^2 + σ₁² * σ₂²
+        varQ[[1:i-1..., i+1:number_of_states...], i] .= σ₁² * μ₂ .^ 2 + σ₂² * μ₁^2 + σ₁² * σ₂²
     end
     return varQ
-end 
+end
 var(Q::BayesianGenerator) = var(Q.posterior)
 
+std(Q::BayesianGenerator) = std(Q.posterior)
+std(Q::GeneratorParameterDistributions) = sqrt.(var(Q))
+
 # Base.LinearAlgebra
+import LinearAlgebra.eigen, LinearAlgebra.eigvals, LinearAlgebra.size
+
 size(Q::BayesianGenerator) = (length(Q.prior.rates), length(Q.prior.rates))
 
 eigen(Q::GeneratorParameterDistributions) = eigen(mean(Q))
@@ -40,13 +49,15 @@ eigen(Q::BayesianGenerator) = eigen(Q.posterior)
 eigvals(Q::GeneratorParameterDistributions) = eigvals(mean(Q))
 eigvals(Q::BayesianGenerator) = eigvals(Q.posterior)
 
-eigen_distribution(Q::GeneratorParameterDistributions; samples = 100) = eigen.(rand(Q, samples))
-eigvals_distribution(Q::GeneratorParameterDistributions; samples = 100) = eigvals.(rand(Q, samples))
+eigen_distribution(Q::GeneratorParameterDistributions; samples=100) = eigen.(rand(Q, samples))
+eigvals_distribution(Q::GeneratorParameterDistributions; samples=100) = eigvals.(rand(Q, samples))
 
-eigen_distribution(Q::BayesianGenerator; samples = 100) = eigen_distribution(Q.posterior; samples = samples)
-eigvals_distribution(Q::BayesianGenerator; samples =100) = eigvals_distribution(Q.posterior; samples=samples)
+eigen_distribution(Q::BayesianGenerator; samples=100) = eigen_distribution(Q.posterior; samples=samples)
+eigvals_distribution(Q::BayesianGenerator; samples=100) = eigvals_distribution(Q.posterior; samples=samples)
 
 # Base.show
+import Base.show
+
 function Base.show(io::IO, Q::GeneratorParameterDistributions)
     color1 = :white
     color2 = :magenta

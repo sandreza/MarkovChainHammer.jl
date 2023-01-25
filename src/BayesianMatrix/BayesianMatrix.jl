@@ -5,13 +5,7 @@ module BayesianMatrix
 
 using Distributions, LinearAlgebra, Random, Statistics
 
-# extend Base
-import Base.rand
-import LinearAlgebra.eigen, LinearAlgebra.eigvals, LinearAlgebra.size
-import Statistics.mean, Statistics.var
-import Base.show
-
-# extend MarkovChainHammer 
+# load MarkovChainHammer 
 import MarkovChainHammer.TransitionMatrix: holding_times, count_operator
 
 # export functions
