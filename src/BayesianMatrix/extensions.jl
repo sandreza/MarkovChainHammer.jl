@@ -55,6 +55,12 @@ eigvals_distribution(Q::GeneratorParameterDistributions; samples=100) = eigvals.
 eigen_distribution(Q::BayesianGenerator; samples=100) = eigen_distribution(Q.posterior; samples=samples)
 eigvals_distribution(Q::BayesianGenerator; samples=100) = eigvals_distribution(Q.posterior; samples=samples)
 
+# Base.copy
+import Base.copy
+copy(Q::GeneratorParameterDistributions) = GeneratorParameterDistributions(copy(Q.rates), copy(Q.exit_probabilities))
+copy(Q::GeneratorPredictiveDistributions) = GeneratorPredictiveDistributions(copy(Q.holding_times), copy(Q.exit_counts))
+copy(Q::BayesianGenerator) = BayesianGenerator(copy(Q.prior), copy(Q.data), copy(Q.posterior), copy(Q.predictive))
+
 # Base.show
 import Base.show
 
