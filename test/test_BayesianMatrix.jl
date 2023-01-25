@@ -3,7 +3,7 @@ using MarkovChainHammer.BayesianMatrix
 using MarkovChainHammer.TransitionMatrix: generator
 using Distributions, Random, Statistics
 
-@testset "Basic Functionality" begin
+@testset "Bayesian Matrix: Basic Functionality" begin
     markov_chain = [1 1 1 1 2 2 1 1 1 3 1 1]
 
     Q = BayesianGenerator(markov_chain)
@@ -37,7 +37,7 @@ using Distributions, Random, Statistics
     @test Λs isa Vector
 end
 
-@testset "Random Matrix Properties" begin
+@testset "Bayesian Matrix: Random Matrix Properties" begin
     markov_chain = [1 1 1 1 2 2 1 1 1 3 1 1]
     Q = BayesianGenerator(markov_chain)
     for N in [10, 100, 1000]
@@ -52,7 +52,7 @@ end
 end
 
 
-@testset "Prior to Posterior" begin
+@testset "Bayesian Matrix: Prior to Posterior" begin
     # test confidence with respect to same data
     markov_chain = [1 1 1 1 2 2 1 1 1 3 1 1]
     prior = GeneratorParameterDistributions(3)

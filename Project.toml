@@ -1,7 +1,7 @@
 name = "MarkovChainHammer"
 uuid = "38c40fd0-bccb-4723-b30d-b2caea0ad8d9"
 authors = ["Andre Souza <andrenogueirasouza@gmail.com>"]
-version = "0.0.3"
+version = "0.0.4"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
@@ -15,9 +15,9 @@ Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
-julia = "1.8"
+julia = "1.8, 1.9"
 Distributions = "0.25"
 Documenter = "0.27"
 DocumenterTools = "0.1"
 ProgressBars = "1.4"
-Revise = "3.4"
+Revise = "3.4, 3.5"
