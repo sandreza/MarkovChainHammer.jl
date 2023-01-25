@@ -1,7 +1,7 @@
 using Statistics
 
 function count_operator(markov_chain, number_of_states)
-    count_matrix = zeros(number_of_states, number_of_states)
+    count_matrix = zeros(typeof(markov_chain[1]), number_of_states, number_of_states)
     for i in 1:length(markov_chain)-1
         count_matrix[markov_chain[i+1], markov_chain[i]] += 1
     end
