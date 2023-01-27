@@ -1,4 +1,5 @@
 using ProgressBars, LinearAlgebra, Statistics
+using MarkovChainHammer
 using MarkovChainHammer.BayesianMatrix
 using MarkovChainHammer.TransitionMatrix: generator
 using Random
@@ -32,7 +33,7 @@ markov_chain1 = Int64[]
 initial_condition = [14.0, 20.0, 27.0]
 push!(timeseries, initial_condition)
 dt = 1.5586522107162 / 64
-iterations = 64 * 16 * 10
+iterations = 64 * 16 
 for i in ProgressBar(2:iterations)
     local state = rk4(lorenz!, timeseries[i-1], dt)
     push!(timeseries, state)
@@ -105,7 +106,7 @@ display(Λ_of_mean)
 println("Although a bit of a heuristic we can check to see if a matrix constructed with more data is within the uncertainty of a matrix constructed with less data")
 
 prior = MarkovChainHammer.BayesianMatrix.uninformative_prior(3)
-Q_small_data = BayesianGenerator(markov_chain1[1:2000]; dt=dt)
+Q_small_data = BayesianGenerator(markov_chain1[1:200]; dt=dt)
 Q_large_data = BayesianGenerator(markov_chain1; dt=dt)
 Q_large_data = BayesianGenerator(markov_chain2, Q_large_data.posterior; dt=dt) 
 # 
