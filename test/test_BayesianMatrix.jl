@@ -20,6 +20,11 @@ using Distributions, Random, Statistics
     @test var(Q.posterior) isa Matrix
     @test all(size(Q) .== (3, 3))
 
+    @test all(abs.(sqrt.(var(Q.posterior)) - std(Q.posterior) ) .< eps(100.0) )
+    @test all(abs.(sqrt.(var(Q)) - std(Q) ) .< eps(100.0) )
+    @test all(std(Q) - std(Q.posterior) .< eps(100.0))
+
+
     Q_r = rand(Q)
     Qs = rand(Q, 10)
     @test all(sum(Qs[3], dims=1) .< eps(100.0))
@@ -27,6 +32,9 @@ using Distributions, Random, Statistics
 
     ΛV = eigen(Q)
     @test ΛV isa Eigen
+
+    Λ = eigvals(Q)
+    @test Λ isa Vector
 
     ΛVs = eigen_distribution(Q; samples=10)
     @test length(ΛVs[1].values) == 3

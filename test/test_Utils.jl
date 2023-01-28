@@ -1,5 +1,6 @@
 using MarkovChainHammer, Test, Revise, Random, LinearAlgebra
 import MarkovChainHammer.Utils: histogram
+import MarkovChainHammer.Utils: autocovariance
 
 @testset "Histogram Test: uniform weight" begin
     timeserieslist = [1 2 2 3 3 3 4 4 4 4 5 5 5 5 5]
@@ -27,3 +28,24 @@ end
     @test all(xs .== bincenters)
     @test all(ys .≈ 0.1 .* collect(1:5))
 end
+
+@testset "Autocovariance Test" begin
+    timeseries = [1 2 3 4 5 6 7 8 9 1]
+    # timeseries check
+    ac = autocovariance(timeseries)
+    @test length(ac) == 10
+    ac2 = autocovariance(timeseries; progress = true)
+    @test length(ac2) == 10
+    @test all((ac - ac2) .== 0)
+    ac = autocovariance(timeseries; timesteps = 5)
+    @test length(ac) == 5
+    Q = generator(timeseries)
+    # generator check
+    g⃗ = ones(9)
+    ac = autocovariance(g⃗, Q, 1:10)
+    @test all(ac .< eps(100.0))
+    Ps = [exp(Q * i) for i in 1:10]
+    ac = autocovariance(g⃗, Ps, 10)
+    @test all(ac .< eps(100.0))
+end
+

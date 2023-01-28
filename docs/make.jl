@@ -16,6 +16,7 @@ mod_dir = "Modules/"
 modules = Any[
     "Overview"=> mod_dir * "module_overview.md",
     "TransitionMatrix" => mod_dir * "transition_matrix.md",
+    "BayesianMatrix" => mod_dir * "bayesian_matrix.md",
     "Trajectory" => mod_dir * "trajectory.md",
     "Clustering" => mod_dir * "clustering.md",
     "Utils" => mod_dir * "utils.md",

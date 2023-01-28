@@ -1,7 +1,7 @@
 """
-`histogram(array, bins=minimum([100, length(array)]), normalization=:uniform, custom_range=false)`
+    histogram(array, bins=minimum([100, length(array)]), normalization=:uniform, custom_range=false)
 
-# Description 
+# Description
     Compute the histogram of an array. Useful for barplot in GLMakie.
 
 # Arguments
