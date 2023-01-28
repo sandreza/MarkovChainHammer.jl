@@ -1,11 +1,28 @@
-# NEED ERROR HANDLING
 import MarkovChainHammer.Trajectory: next_state, generate
+import MarkovChainHammer.TransitionMatrix: holding_times, count_operator
+using ProgressBars
 
 struct ContinuousTimeEmpiricalProcess{S,T}
     holding_times::S
-    cumulative_distribution::T # change to cumulative sum for simulation purposes
+    cumulative_distribution::T 
 end
 
+"""
+ContinuousTimeEmpiricalProcess(markov_chain; number_of_states=length(union(markov_chain)))
+
+Construct a continuous time empirical process from a discrete time Markov chain.
+The holding times are taken from the empirical distribution and the transition probabilities from the empirical transition probabilities
+
+# Arguments 
+- `markov_chain::Vector{Int}`: The discrete time Markov chain to construct the continuous time empirical process from.
+
+# Keyword Arguments
+- `number_of_states::Int=length(union(markov_chain))`: The number of states in the Markov chain.
+
+# Returns
+- `ContinuousTimeEmpiricalProcess`: A continuous time empirical process constructed from the discrete time Markov chain.
+
+"""
 function ContinuousTimeEmpiricalProcess(markov_chain; number_of_states=length(union(markov_chain)))
     ht = holding_times(markov_chain)
     count_matrix = count_operator(markov_chain, number_of_states)
@@ -17,19 +34,4 @@ function ContinuousTimeEmpiricalProcess(markov_chain; number_of_states=length(un
     pmatrix = count_matrix ./ Ntotes
     cP = cumsum(pmatrix, dims=1)
     return ContinuousTimeEmpiricalProcess(ht, cP)
-end
-
-function generate(process::ContinuousTimeEmpiricalProcess, n, initial_condition)
-    simulated_chain = Int64[]
-    push!(simulated_chain, initial_condition)
-    for i in ProgressBar(1:n)
-        current_state = simulated_chain[end]
-        htempirical = rand(process.holding_times[current_state])
-        for i in 1:htempirical
-            push!(simulated_chain, current_state)
-        end
-        simulated_chain = vcat(simulated_chain...)
-        push!(simulated_chain, next_state(current_state, process.cumulative_distribution))
-    end
-    return simulated_chain
 end

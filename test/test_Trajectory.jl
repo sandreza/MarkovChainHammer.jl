@@ -1,6 +1,7 @@
 using MarkovChainHammer, Test, Revise, Random, LinearAlgebra
 import MarkovChainHammer.TransitionMatrix: count_operator, generator, holding_times, perron_frobenius
 import MarkovChainHammer.Trajectory: generate
+import MarkovChainHammer.Trajectory: ContinuousTimeEmpiricalProcess
 Random.seed!(12345)
 
 @testset "Convergence Test: Generator" begin
@@ -48,7 +49,6 @@ end
     @test(2 == length(generate(0 * Q)))
 end
 
-
 @testset "Holding Times" begin
     markov_chain = Int.([ones(5); ones(4) * 2; ones(2)])
     markov_chain_holding_times = holding_times(markov_chain)
@@ -59,4 +59,12 @@ end
 
     @test all(markov_chain_holding_times[1] .== [15.0, 6.0])
     @test all(markov_chain_holding_times[2] .== 12.0)
+end
+
+@testset "ContinuousTimeEmpiricalProcess" begin
+    markov_chain = Int.([ones(5); ones(4) * 2; ones(2)])
+    ctep = ContinuousTimeEmpiricalProcess(markov_chain)
+    @test all([all(ctep.holding_times[i] .== holding_times(markov_chain)[i]) for i in 1:2])
+    generated_markov_chain = generate(ctep, 10, 1)
+    @test (length(generated_markov_chain) >= 10)
 end
