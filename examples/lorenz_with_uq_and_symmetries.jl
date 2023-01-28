@@ -48,7 +48,11 @@ Q1 = BayesianGenerator(markov_chain1; dt=dt)
 # check against the empirical generator
 Q = generator(markov_chain1; dt =dt)
 
-println("The mean of our Bayesian generator is ")
+
+println("The empirical generator is ")
+display(Q)
+
+println("The mean of the Bayesian generator is ")
 display(mean(Q1))
 
 println("The difference between the empirical and bayesian is ") 
@@ -73,14 +77,21 @@ end
 markov_chain2 = lorenz_symmetry.(markov_chain1)
 Q2 = BayesianGenerator(markov_chain2; dt=dt)
 
-# We take the posterior of the first simulation for the second simulation  
+println("We can also construct a generator from the symmetrized markov chain which flips states 1 and 3, this accounts for symmetries in the system")
+println("The mean of the Bayesian generator with the flipped markov chain is ")
+display(mean(Q2))
+
+println("We will now assimilate the two data (original and symmetry flip) in two different orders and check that the answer is the same")
+println("We take the posterior of the first Bayesian Matrix as the prior for a new Bayesian matrix that assimilates the symmetry flipped version of the markov chain") 
 Q12 = BayesianGenerator(markov_chain2, Q1.posterior; dt = dt)
-# and visa versa
+display(mean(Q12))
+println("And visa versa to get")
 Q21 = BayesianGenerator(markov_chain1, Q2.posterior; dt = dt)
+display(mean(Q21))
 
 # The two answers should be exactly equivalent
 println("   ")
-println("We can check that the order in which we assimilate data doesn't matter")
+println("The order in which we assimilate data doesn't matter")
 # and should correspond to learning all the data at once
 println("The difference in means are  ") 
 display(mean(Q12) - mean(Q21))
