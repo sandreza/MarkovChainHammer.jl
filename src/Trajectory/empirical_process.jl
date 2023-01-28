@@ -1,4 +1,3 @@
-import MarkovChainHammer.Trajectory: next_state, generate
 import MarkovChainHammer.TransitionMatrix: holding_times, count_operator
 using ProgressBars
 

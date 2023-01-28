@@ -64,3 +64,16 @@ log(ℳ) / dt
 
 The columns still sum to zero, but the entries of the matrix no longer have an interpretation as holding times or probabilities. This example also shows why generators have a much more limited and special structure as compared to the transfer operator. The requirement that one generates probabilities over infinitesimal steps imposes severe restrictions. We may lift these restrictions if we are willing to give up computing an infinitesimal generator and live with generators that are applicable only over a finite timescale. This fact reflects a well-known theorem in numerical analysis that positivity preserving linear operators are inherently lower-order. 
 
+An alternative way to construct the generator from the perron-frobenius operator is to take the difference between the identity matrix and the perron-frobenius operator and then divide by dt
+```@example datadriven2 
+using LinearAlgebra
+dt = 1.0
+Q = (ℳ - I) / dt
+```
+where we had to use the `LinearAlgebra` package to import the identity matrix.
+This calculation makes use of the relation that the generator is the infinitesimal generator of the perron-frobenius operator
+```math
+\mathcal{M} = e^{dt Q} \approx \mathbb{I} + dt Q 
+```
+This is only good if the timesteps are sufficiently small.
+
