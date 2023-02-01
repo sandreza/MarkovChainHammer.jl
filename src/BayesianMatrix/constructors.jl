@@ -131,4 +131,4 @@ end
 BayesianGenerator(prior::GeneratorParameterDistributions) = BayesianGenerator(prior, nothing, prior, nothing)
 BayesianGenerator(data; dt = 1) = BayesianGenerator(data,  uninformative_prior(maximum(data)) ; dt=dt)
 
-uninformative_prior(number_of_states) = GeneratorParameterDistributions(number_of_states::Int; α=eps(10.0), β=eps(10.0), αs=ones(number_of_states - 1) * eps(10.0))
+uninformative_prior(number_of_states; scale=eps(1e2)) = GeneratorParameterDistributions(number_of_states::Int; α=scale, β=scale, αs=ones(number_of_states - 1) * scale)
