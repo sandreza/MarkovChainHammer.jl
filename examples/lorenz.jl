@@ -30,7 +30,7 @@ markov_chain = Int64[]
 initial_condition = [14.0, 20.0, 27.0]
 push!(timeseries, initial_condition)
 dt = 1.5586522107162 / 64 
-iterations = 1000
+iterations = 1000 
 for i in ProgressBar(2:iterations)
     local state = rk4(lorenz!, timeseries[i-1], dt)
     push!(timeseries, state)
@@ -71,6 +71,24 @@ for i in 1:3
     for j in i:3
         push!(observables, u -> u[i] * u[j])
         push!(labels, primitive_labels[i] * primitive_labels[j])
+    end
+end
+for i in 1:3
+    for j in i:3
+        for k in j:3
+            push!(observables, u -> u[i] * u[j] * u[k])
+            push!(labels, primitive_labels[i] * primitive_labels[j] * primitive_labels[k])
+        end
+    end
+end
+for i in 1:3
+    for j in i:3
+        for k in j:3
+            for l in k:3
+                push!(observables, u -> u[i] * u[j] * u[k] * u[l])
+                push!(labels, primitive_labels[i] * primitive_labels[j] * primitive_labels[k] * primitive_labels[l])
+            end
+        end
     end
 end
 
