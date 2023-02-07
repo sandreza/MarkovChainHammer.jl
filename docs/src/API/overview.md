@@ -14,4 +14,10 @@ The following sections contain more advanced mathematical concepts using continu
 0. [Data-driven Generator](@ref sec:empirical_generator): Construct empirical generators from a Markov Chain
 0. [Convergence of Generators](@ref sec:generator_convergence): Verify convergence of empirical generators to the true generator
 
+## Uncertainty Quantification
+The following sections introduce uncertainty quantification for the estimate of Generators from finite data
+0. [Bayesian Empirical Generator](@ref sec:bayesian_empirical): Estimate the uncertainty of the entries in the empirical generator from finite data
+0. [Constructing Prior Distributions](@ref sec:constructing_priors): Construct and use prior distributions for the entries in the empirical generator
+0. [Sampling from the Bayesian Generator](@ref sec:generator_sampling): Sample from the Bayesian empirical generator to propagate uncertainties
+
 

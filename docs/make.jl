@@ -4,17 +4,19 @@ using MarkovChainHammer
 api_dir = "API/"
 dt_dir = "Discrete Time/"
 ct_dir = "Continuous Time/"
+uq_dir = "Uncertainty Quantification/"
 
 api = Any[
-    "Overview"=> api_dir * "overview.md",
-    "Discrete Time"=> (api_dir * dt_dir) .* ["transfer_operators.md", "empirical_transfer_operators.md", "convergence.md"],
+    "Overview" => api_dir * "overview.md",
+    "Discrete Time" => (api_dir * dt_dir) .* ["transfer_operators.md", "empirical_transfer_operators.md", "convergence.md"],
     "Continuous Time" => (api_dir * ct_dir) .* ["generators.md", "empirical_generator.md",  "convergence.md"],
+    "Uncertainty Quantification" => (api_dir*uq_dir).*["bayesian_empirical_generator.md", "constructing_prior.md", "sampling.md"],
 ]
 
 
 mod_dir = "Modules/"
 modules = Any[
-    "Overview"=> mod_dir * "module_overview.md",
+    "Overview" => mod_dir * "module_overview.md",
     "TransitionMatrix" => mod_dir * "transition_matrix.md",
     "BayesianMatrix" => mod_dir * "bayesian_matrix.md",
     "Trajectory" => mod_dir * "trajectory.md",
