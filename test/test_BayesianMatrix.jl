@@ -4,7 +4,7 @@ using MarkovChainHammer.TransitionMatrix: generator
 using Distributions, Random, Statistics
 
 @testset "Bayesian Matrix: Basic Functionality" begin
-    markov_chain = [1 1 1 1 2 2 1 1 1 3 1 1]
+    markov_chain = [1 1 1 2 3 1 2 2 1 1 1 3 1 1 2 1 2 1 3 2]
 
     Q = BayesianGenerator(markov_chain)
     @test rand(Q) isa Matrix
@@ -16,18 +16,19 @@ using Distributions, Random, Statistics
     Q̅ = mean(Q)
     Q_d = generator(markov_chain)
 
-    @test all(abs.(Q̅ .- Q_d) .< eps(100.0))
+    tolerance = eps(1e3)
+    @test all(abs.(Q̅ .- Q_d) .< tolerance)
     @test var(Q.posterior) isa Matrix
     @test all(size(Q) .== (3, 3))
 
-    @test all(abs.(sqrt.(var(Q.posterior)) - std(Q.posterior) ) .< eps(100.0) )
-    @test all(abs.(sqrt.(var(Q)) - std(Q) ) .< eps(100.0) )
-    @test all(std(Q) - std(Q.posterior) .< eps(100.0))
+    @test all(abs.(sqrt.(var(Q.posterior)) - std(Q.posterior)) .< tolerance)
+    @test all(abs.(sqrt.(var(Q)) - std(Q)) .< tolerance)
+    @test all(std(Q) - std(Q.posterior) .< tolerance)
 
 
     Q_r = rand(Q)
     Qs = rand(Q, 10)
-    @test all(sum(Qs[3], dims=1) .< eps(100.0))
+    @test all(sum(Qs[3], dims=1) .< tolerance)
 
 
     ΛV = eigen(Q)

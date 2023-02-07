@@ -1,6 +1,3 @@
-# Dependencies
-# 
-
 module BayesianMatrix
 
 using Distributions, LinearAlgebra, Random, Statistics
@@ -31,6 +28,8 @@ struct GeneratorPredictiveDistributions{H,P}
 end
 
 include("constructors.jl")
+export uninformative_prior
+
 include("extensions.jl")
 
 end # module BayesianMatrix

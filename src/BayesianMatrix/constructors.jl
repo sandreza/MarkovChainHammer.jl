@@ -98,7 +98,7 @@ function BayesianGenerator(data, prior::GeneratorParameterDistributions; dt=1)
         if number_of_exits > 0
             β_new = β + sum(ht_data[i])
         else
-            @warn "no data for state $i, falling back on prior for posterior distribution"
+            @warn "no data for state $i, falling back on prior"
             β_new = β
         end
         θ_new = 1 / β_new
@@ -112,13 +112,12 @@ function BayesianGenerator(data, prior::GeneratorParameterDistributions; dt=1)
         # next the exit probabilities
         # posterior
         αs = params(prior.exit_probabilities[i])[1]
-        αs_new = αs + p_data[i, [1:i-1..., i+1:number_of_states...]]
+        αs_new = αs + p_data[[1:i-1..., i+1:number_of_states...], i]
         posterior_exit_probabilities[i] = Dirichlet(αs_new)
         # predictive
         if number_of_exits > 0
             n = length(ht_data[i])
         else
-            @warn "no data for state $i, falling back on DirichletMultinomial with one observation for predictive distribution"
             n = 1
         end
         predictive_exit_counts[i] = DirichletMultinomial(n, αs_new)
@@ -131,4 +130,4 @@ end
 BayesianGenerator(prior::GeneratorParameterDistributions) = BayesianGenerator(prior, nothing, prior, nothing)
 BayesianGenerator(data; dt = 1) = BayesianGenerator(data,  uninformative_prior(maximum(data)) ; dt=dt)
 
-uninformative_prior(number_of_states) = GeneratorParameterDistributions(number_of_states::Int; α=eps(10.0), β=eps(10.0), αs=ones(number_of_states - 1) * eps(10.0))
+uninformative_prior(number_of_states; scale=eps(1e2)) = GeneratorParameterDistributions(number_of_states::Int; α=scale, β=scale, αs=ones(number_of_states - 1) * scale)
