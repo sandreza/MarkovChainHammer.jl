@@ -50,9 +50,9 @@ eigvals(Q::GeneratorParameterDistributions) = eigvals(mean(Q))
 eigvals(Q::BayesianGenerator) = eigvals(Q.posterior)
 
 eigen_distribution(Q::GeneratorParameterDistributions; samples=100) = eigen.(rand(Q, samples))
-eigvals_distribution(Q::GeneratorParameterDistributions; samples=100) = eigvals.(rand(Q, samples))
-
 eigen_distribution(Q::BayesianGenerator; samples=100) = eigen_distribution(Q.posterior; samples=samples)
+
+eigvals_distribution(Q::GeneratorParameterDistributions; samples=100) = eigvals.(rand(Q, samples))
 eigvals_distribution(Q::BayesianGenerator; samples=100) = eigvals_distribution(Q.posterior; samples=samples)
 
 # Base.copy

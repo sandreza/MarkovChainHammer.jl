@@ -1,6 +1,3 @@
-# Dependencies
-# 
-
 module BayesianMatrix
 
 using Distributions, LinearAlgebra, Random, Statistics
