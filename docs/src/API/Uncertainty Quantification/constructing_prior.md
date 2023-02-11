@@ -1,6 +1,6 @@
 # [Constructing Prior Distributions](@id sec:constructing_priors)
 
-In the previous section we saw how to use the BayesianGenerator object similar to how we use the generator function. We now introduce the GeneratorParameterDistribution object in order to construct prior distributions for Bayesian inference. 
+In the previous section we saw how to use the BayesianGenerator object, similar to how we use the generator function. We now introduce the GeneratorParameterDistribution object in order to construct prior distributions for Bayesian inference. 
 
 We first load the necessary packages and functions
 
@@ -38,7 +38,7 @@ and now use our prior distribution along with the BayesianGenerator object
 Q_bayes = BayesianGenerator(markov_chain, prior; dt = dt)
 ```
 
-We see that we get a difference answer than what we had before due to the presence of the prior distribution
+We see that we get a different answer than what we had before due to the presence of the prior distribution
 
 ```@example constructing_prior
 Q_bayes_uninformative_prior = BayesianGenerator(markov_chain; dt = dt)

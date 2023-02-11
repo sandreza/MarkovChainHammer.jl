@@ -1,6 +1,6 @@
 # [Bayesian Empirical Generator](@id sec:bayesian_empirical)
 
-In this section we will show how utilise the Bayesian empirical generator to estimate the uncertainty of the entries in the empirical generator from finite data. We we will do so by generating a Markov chain from a generator matrix. First let's load a few packages and functions that we've become familiar with over the last few sections.
+In this section we will show how to utilise the Bayesian empirical generator to estimate the uncertainty of the entries in the empirical generator from finite data. We we will do so by generating a Markov chain from a generator matrix. First let's load a few packages and functions that we've become familiar with over the last few sections.
 ```@example bayesian_empirical_generator
 using Random, MarkovChainHammer, Statistics
 using MarkovChainHammer.TransitionMatrix: generator
@@ -34,7 +34,7 @@ This submodule naturally exports a number of structs and functions. We can see t
 names(MarkovChainHammer.BayesianMatrix)
 ```
 
-In particular a BayesianGenerator object is exported. We use the BayesianGenerator just like to normal generator in order to construct a BayesianGenerator
+In particular a BayesianGenerator object is exported. We use the BayesianGenerator just like a normal generator in order to construct a BayesianGenerator
 
 ```@example bayesian_empirical_generator
 Q_bayes = BayesianGenerator(markov_chain; dt = dt)
