@@ -8,6 +8,7 @@ import MarkovChainHammer.TransitionMatrix: holding_times, count_operator
 # export functions
 export BayesianGenerator, GeneratorParameterDistributions
 export eigen_distribution, eigvals_distribution
+export uninformative_prior
 
 # general abstractions
 struct BayesianGenerator{PB,D,PA,PP}

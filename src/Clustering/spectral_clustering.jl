@@ -1,6 +1,6 @@
 using LinearAlgebra
 
-# credit to Peter Schmid
+# credit to Peter Schmid and Ludovico Giorgini
 
 function modularity_matrix(A; ϵ=eps(100.0))
     abs_A = abs.(A)
@@ -12,6 +12,28 @@ function modularity_matrix(A; ϵ=eps(100.0))
     b = Ã - (Ko * Ki) / m
     B = Symmetric(b + b')
     return B
+end
+
+function giorgini_matrix(A)
+    N = size(A)[1]
+    b = zeros(N, N)
+    for i = 1:N, j = 1:N
+        b[i, j] = (A[i, j] - (1 - A[i, i]) * (sum(A[j, :])) / N) / N
+    end
+    B = Symmetric(b + b')
+    return B
+end
+
+function generator_fine_matrix(Q)
+    Λ = eigenvalues(Q)
+    P = exp(Q / real(Λ[1]))
+    return giorgini_matrix(P)
+end
+
+function generator_coarse_matrix(Q)
+    Λ = eigenvalues(Q)
+    P = exp(Q / real(Λ[end-1]))
+    return giorgini_matrix(P)
 end
 
 function principal_vector(B::Symmetric)
@@ -46,7 +68,7 @@ function split_community(B, indices; ϵ=eps(1e6))
 end
 
 """
-`leicht_newman(A)`
+`leicht_newman(A; modularity_type = :giorgini)`
 
 # Description 
     Compute the communities of a graph using the Leicht Newman algorithm.
@@ -54,11 +76,24 @@ end
 # Arguments
 - `A::AbstractArray`: Adjacency matrix of the graph.
 
+# Keyword Arguments
+- `modularity_type::Symbol`: Type of modularity matrix to use. Can be `:giorgini`, `:modularity`, `:generator_fine`, or `:generator_coarse`. Defaults to `:modularity`.
+
 # Returns
 - `AbstractArray`: Array of communities.
 """
-function leicht_newman(A)
-    B = modularity_matrix(A)
+function leicht_newman(A; modularity_type = :modularity)
+    if modularity_type == :giorgini
+        B = giorgini_matrix(A)
+    elseif modularity_type == :modularity
+        B = modularity_matrix(A)
+    elseif modularity_type == :generator_fine
+        B = generator_fine_matrix(A)
+    elseif modularity_type == :generator_coarse
+        B = generator_coarse_matrix(A)
+    else
+        error("modularity_type must be :giorgini , :modularity, :generator_fine, or :generator_coarse")
+    end
     n = size(A)[1]
     W, F = [collect(1:n)], []
 

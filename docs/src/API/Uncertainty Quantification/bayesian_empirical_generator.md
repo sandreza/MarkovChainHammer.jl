@@ -40,7 +40,7 @@ In particular a BayesianGenerator object is exported. We use the BayesianGenerat
 Q_bayes = BayesianGenerator(markov_chain; dt = dt)
 ```
 
-This is no longer a regular matrix, but rather a random matrix whose entries are given by a probability distribution consistent with finite sampling from a markov process. In the present context (this will change later when we discuss prior distributions) the mean of the Bayesian matrix reproduces the same matrix as the emperically obtained matrix, as we can check
+This is no longer a regular matrix, but rather a random matrix whose entries are given by a probability distribution consistent with finite sampling from a markov process. In the present context (this will change later when we discuss prior distributions) the mean of the Bayesian matrix reproduces the same matrix as the empirically obtained matrix, as we can check
 
 ```@example bayesian_empirical_generator
 mean(Q_bayes) - Qempirical
