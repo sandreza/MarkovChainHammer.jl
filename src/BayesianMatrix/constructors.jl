@@ -80,7 +80,7 @@ Construct a BayesianGenerator object from data and a prior distribution.
 function BayesianGenerator(data, prior::GeneratorParameterDistributions; dt=1)
     number_of_states = length(prior.rates)
     ht_data = holding_times(data, number_of_states; dt=dt)
-    p_data = Int.(count_operator(data, number_of_states))
+    p_data = count_operator(data, number_of_states)
     p_data = p_data - Diagonal(diag(p_data))
 
     posterior_rates = Vector{Gamma{Float64}}(undef, number_of_states)
