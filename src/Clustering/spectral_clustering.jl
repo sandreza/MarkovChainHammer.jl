@@ -1,6 +1,6 @@
 using LinearAlgebra
 
-# credit to Peter Schmid
+# credit to Peter Schmid and Ludovico Giorgini
 
 function modularity_matrix(A; ϵ=eps(100.0))
     abs_A = abs.(A)
