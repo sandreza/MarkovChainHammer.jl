@@ -8,10 +8,18 @@ function count_operator(markov_chain, number_of_states)
     return count_matrix
 end
 
-count_operator(markov_chain) = count_operator(markov_chain, maximum(markov_chain))
+function count_operator(markov_chain, number_of_states, step)
+    count_matrix = zeros(typeof(markov_chain[1]), number_of_states, number_of_states)
+    for i in 0:step-1
+        count_matrix += count_operator(markov_chain[1+i:step:end], number_of_states)
+    end
+    return count_matrix
+end
 
-function perron_frobenius(markov_chain, number_of_states)
-    count_matrix = count_operator(markov_chain, number_of_states)
+count_operator(markov_chain; step = 1) = count_operator(markov_chain, maximum(markov_chain), step)
+
+function perron_frobenius(markov_chain, number_of_states; step = 1)
+    count_matrix = count_operator(markov_chain, number_of_states, step)
     normalization = sum(count_matrix, dims=1)
     perron_frobenius_matrix = count_matrix ./ normalization
     # handle edge case where no transitions occur
@@ -25,7 +33,7 @@ function perron_frobenius(markov_chain, number_of_states)
 end
 
 """
-`perron_frobenius(markov_chain)`
+`perron_frobenius(markov_chain; step = 1)`
 
 # Description 
     Calculate the perron-frobenius matrix from a markov chain.
@@ -33,10 +41,13 @@ end
 # Arguments
 - `markov_chain::AbstractVector`: A vector of integers representing the state of a markov chain at each time step.
 
+# Keyword Arguments
+- `step::Integer=1`: The step size of the constructed operator.
+
 # Returns
 - `perron_frobenius_matrix::Matrix`: The perron-frobenius matrix of the markov chain.
 """
-perron_frobenius(markov_chain) = perron_frobenius(markov_chain, maximum(markov_chain))
+perron_frobenius(markov_chain; step = 1) = perron_frobenius(markov_chain, maximum(markov_chain); step = step)
 
 """
 `holding_times(markov_chain, number_of_states; dt=1)`

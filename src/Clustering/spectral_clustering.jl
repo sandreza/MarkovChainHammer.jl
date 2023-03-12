@@ -14,6 +14,16 @@ function modularity_matrix(A; ϵ=eps(100.0))
     return B
 end
 
+function giorgini_matrix(A)
+    N = size(A)[1]
+    b = zeros(N, N)
+    for i = 1:N, j = 1:N
+        b[i, j] = (A[i, j] - (1 - A[i, i]) * (sum(A[j, :])) / N) / N
+    end
+    B = Symmetric(b + b')
+    return B
+end
+
 function principal_vector(B::Symmetric)
     s = ones(Int, size(B)[1])
     Λ, V = eigen(B)
@@ -46,7 +56,7 @@ function split_community(B, indices; ϵ=eps(1e6))
 end
 
 """
-`leicht_newman(A)`
+`leicht_newman(A; modularity_type = :giorgini)`
 
 # Description 
     Compute the communities of a graph using the Leicht Newman algorithm.
@@ -54,11 +64,20 @@ end
 # Arguments
 - `A::AbstractArray`: Adjacency matrix of the graph.
 
+# Keyword Arguments
+- `modularity_type::Symbol`: Type of modularity matrix to use. Can be `:giorgini` or `:modularity`. Defaults to `:giorgini`.
+
 # Returns
 - `AbstractArray`: Array of communities.
 """
-function leicht_newman(A)
-    B = modularity_matrix(A)
+function leicht_newman(A; modularity_type = :giorgini)
+    if modularity_type == :giorgini
+        B = giorgini_matrix(A)
+    elseif modularity_type == :modularity
+        B = modularity_matrix(A)
+    else
+        error("modularity_type must be :giorgini or :modularity")
+    end
     n = size(A)[1]
     W, F = [collect(1:n)], []
 
