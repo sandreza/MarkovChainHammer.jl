@@ -24,6 +24,18 @@ function giorgini_matrix(A)
     return B
 end
 
+function generator_fine_matrix(Q)
+    Λ = eigenvalues(Q)
+    P = exp(Q / real(Λ[1]))
+    return giorgini_matrix(P)
+end
+
+function generator_coarse_matrix(Q)
+    Λ = eigenvalues(Q)
+    P = exp(Q / real(Λ[end-1]))
+    return giorgini_matrix(P)
+end
+
 function principal_vector(B::Symmetric)
     s = ones(Int, size(B)[1])
     Λ, V = eigen(B)
@@ -65,18 +77,22 @@ end
 - `A::AbstractArray`: Adjacency matrix of the graph.
 
 # Keyword Arguments
-- `modularity_type::Symbol`: Type of modularity matrix to use. Can be `:giorgini` or `:modularity`. Defaults to `:giorgini`.
+- `modularity_type::Symbol`: Type of modularity matrix to use. Can be `:giorgini`, `:modularity`, `:generator_fine`, or `:generator_coarse`. Defaults to `:modularity`.
 
 # Returns
 - `AbstractArray`: Array of communities.
 """
-function leicht_newman(A; modularity_type = :giorgini)
+function leicht_newman(A; modularity_type = :modularity)
     if modularity_type == :giorgini
         B = giorgini_matrix(A)
     elseif modularity_type == :modularity
         B = modularity_matrix(A)
+    elseif modularity_type == :generator_fine
+        B = generator_fine_matrix(A)
+    elseif modularity_type == :generator_coarse
+        B = generator_coarse_matrix(A)
     else
-        error("modularity_type must be :giorgini or :modularity")
+        error("modularity_type must be :giorgini , :modularity, :generator_fine, or :generator_coarse")
     end
     n = size(A)[1]
     W, F = [collect(1:n)], []
