@@ -59,7 +59,7 @@ g_timeseries = mean(observable.(timeseries))
 println("The ensemble average   ⟨xyz⟩  is $(g_ensemble)")
 println("The timeseries average ⟨xyz⟩  is $(g_timeseries)")
 
-## construct ensemble and temporal averages of first and second moments
+## construct ensemble and temporal averages of first, second, third, and fourth moments
 primitive_labels = ["x", "y", "z"]
 observables = []
 labels = []
