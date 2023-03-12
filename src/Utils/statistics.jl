@@ -54,7 +54,7 @@ function autocovariance(g⃗, Q::Eigen, timelist; progress=false)
     μ = sum(p .* g⃗)
     progress ? iter = ProgressBar(eachindex(timelist)) : iter = eachindex(timelist)
     for i in iter
-        autocov[i] = real(w1 * (exp.(Λ .* timelist[i]) .* v1)) - μ^2
+        autocov[i] = real(w1 * (exp.(Λ .* timelist[i]) .* v1) - μ^2)
     end
     return autocov
 end
