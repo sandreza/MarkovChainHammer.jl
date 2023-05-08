@@ -130,4 +130,32 @@ end
 BayesianGenerator(prior::GeneratorParameterDistributions) = BayesianGenerator(prior, nothing, prior, nothing)
 BayesianGenerator(data; dt = 1) = BayesianGenerator(data,  uninformative_prior(maximum(data)) ; dt=dt)
 
+"""
+    BayesianGenerator(data::Vector{Vector{Int64}}, prior::GeneratorParameterDistributions; dt=1)
+
+    The ensemble version of the BayesianGenerator constructor. Here the data is a vector of vectors of integers, where each vector of integers is a single ensemble member trajectory.
+
+    # Arguments
+    - `data::Vector{Vector{Int64}}`: The data to construct the BayesianGenerator object from.
+    - `prior::GeneratorParameterDistributions`: The prior distribution for the BayesianGenerator object.
+
+    # Keyword Arguments
+    - `dt::Number=1`: The time step between each data point.
+
+    # Returns
+    - `BayesianGenerator`: A BayesianGenerator object constructed from the data and the prior distribution. Contains the posterior distributions for the rates and exit probabilities, as well as the predictive distributions for the holding times and exit counts.
+"""
+function BayesianGenerator(data::Vector{Vector{Int64}}, prior::GeneratorParameterDistributions; dt=1)
+    new_prior = prior
+    Q = BayesianGenerator(data[1], new_prior; dt=dt)
+    for i in eachindex(data)
+        @assert all(data[i] .> 0)
+        Q = BayesianGenerator(data[i], new_prior; dt=dt)
+        new_prior = Q.posterior
+    end
+    return Q
+end
+BayesianGenerator(data::Vector{Vector{Int64}}; dt=1) = BayesianGenerator(data, uninformative_prior(maximum(reduce(vcat, data))); dt=dt)
+
+
 uninformative_prior(number_of_states; scale=eps(1e2)) = GeneratorParameterDistributions(number_of_states::Int; α=scale, β=scale, αs=ones(number_of_states - 1) * scale)
