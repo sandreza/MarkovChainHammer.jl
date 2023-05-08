@@ -84,3 +84,11 @@ end
     @test sum([sum(abs.((params.(Q21.posterior.rates)[i].-params.(Q12.posterior.rates)[i])[1])) for i in 1:3]) < eps(10.0)
 end
 
+
+@testset "Bayesian Matrix: Ensemble Functionality" begin
+    data = [rand([1, 2, 3], 10) for i in 1:2]
+    Q = BayesianGenerator(data)
+    Q1 = BayesianGenerator(data[1])
+    Q2 = BayesianGenerator(data[2], Q1.posterior)
+    @test all( abs.(mean(Q) - mean(Q2)) .< eps(10.0))
+end
