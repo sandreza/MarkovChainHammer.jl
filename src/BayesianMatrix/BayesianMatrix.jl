@@ -11,9 +11,8 @@ export eigen_distribution, eigvals_distribution
 export uninformative_prior
 
 # general abstractions
-struct BayesianGenerator{PB,D,PA,PP}
+struct BayesianGenerator{PB,PA,PP}
     prior::PB
-    data::D
     posterior::PA
     predictive::PP
 end

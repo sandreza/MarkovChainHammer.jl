@@ -48,18 +48,44 @@ The covariance is CoVar[X⃗ ⊗ X⃗] = Diagonal(α̃) - α̃ ⊗ α̃ / (α₀
 The variance Var(Xᵢ) = α̃ᵢ(1-α̃ᵢ) / (α₀ + 1) where α₀ = sum(αs).
 
 """
-function GeneratorParameterDistributions(number_of_states::Int; α=1, β=1, αs=ones(number_of_states - 1))
-    @assert length(αs) == number_of_states - 1
+# function GeneratorParameterDistributions(number_of_states::Int; α=1, β=1, αs=ones(number_of_states - 1))
+#     @assert length(αs) == number_of_states - 1
+#     @assert all(αs .> 0)
+#     @assert α > 0
+#     @assert β > 0
+#     α = α
+#     β = β
+#     θ = 1 / β
+#     rates = [Gamma(α, θ) for i in 1:number_of_states]
+#     exit_probabilities = [Dirichlet(αs) for i in 1:number_of_states]
+#     return GeneratorParameterDistributions(rates, exit_probabilities)
+# end
+
+function GeneratorParameterDistributions(number_of_states::Int;  α=ones(number_of_states), β=ones(number_of_states), αs=ones(number_of_states - 1, number_of_states))
+    if length(α) == 1 && length(β) == 1
+        α = fill(α, number_of_states)
+        β = fill(β, number_of_states)
+        αs = repeat(αs, 1, number_of_states)
+    end
+    @assert size(αs)[1] == number_of_states - 1
+    @assert size(αs)[2] == size(α)[1] == size(β)[1] == number_of_states
     @assert all(αs .> 0)
-    @assert α > 0
-    @assert β > 0
+    @assert all(α .> 0)
+    @assert all(β .> 0)
     α = α
     β = β
-    θ = 1 / β
-    rates = [Gamma(α, θ) for i in 1:number_of_states]
-    exit_probabilities = [Dirichlet(αs) for i in 1:number_of_states]
+    θ = 1 ./ β
+    rates = [Gamma(α[i], θ[i]) for i in 1:number_of_states]
+    exit_probabilities = [Dirichlet(αs[:,i]) for i in 1:number_of_states]
     return GeneratorParameterDistributions(rates, exit_probabilities)
 end
+
+#ADD alias functions to cover cases where only one of the inputs is provided and make sure the type matches up !!
+
+function GeneratorPredictiveDistributions(number_of_states::Int; μ=ones(number_of_states), σ=ones(number_of_states), ξ=ones(number_of_states), n=ones(number_of_states), αs=ones(number_of_states - 1, number_of_states))
+    #
+end
+
 
 """
     BayesianGenerator(data, prior::GeneratorParameterDistributions; dt=1)
@@ -124,10 +150,44 @@ function BayesianGenerator(data, prior::GeneratorParameterDistributions; dt=1)
     end
     posterior = GeneratorParameterDistributions(posterior_rates, posterior_exit_probabilities)
     predictive = GeneratorPredictiveDistributions(predictive_holding_times, predictive_exit_counts)
-    return BayesianGenerator(prior, data, posterior, predictive)
+    return BayesianGenerator(prior, posterior, predictive)
 end
 
-BayesianGenerator(prior::GeneratorParameterDistributions) = BayesianGenerator(prior, nothing, prior, nothing)
-BayesianGenerator(data; dt = 1) = BayesianGenerator(data,  uninformative_prior(maximum(data)) ; dt=dt)
+BayesianGenerator(prior::GeneratorParameterDistributions) = BayesianGenerator(prior, prior, nothing)
+BayesianGenerator(data; dt = 1) = BayesianGenerator(data,  uninformative_prior(maximum(data)) ; dt=dt) #this might need fixing
 
 uninformative_prior(number_of_states; scale=eps(1e2)) = GeneratorParameterDistributions(number_of_states::Int; α=scale, β=scale, αs=ones(number_of_states - 1) * scale)
+
+function parameters(dist::GeneratorParameterDistributions)
+    number_of_states = size(dist.rates)[1]
+    α = zeros(number_of_states)
+    β = zeros(number_of_states)
+    αs = zeros(number_of_states-1, number_of_states)
+    for i in 1:number_of_states
+        α[i] = params(dist.rates[i])[1]
+        β[i] = 1/params(dist.rates[i])[2]
+        αs[:,i] = params(dist.exit_probabilities[i])[1]
+    end
+    return α, β, αs
+end
+
+function parameters(dist::GeneratorPredictiveDistributions)
+    #same Functionality
+end
+
+function unpack(Q::BayesianGenerator)
+    #idk what the best format is
+    prior_param = parameters(Q.prior) #each of these is a tuple of lists of params
+    posterior_param = parameters(Q.posterior)
+    predictive_param = parameters(Q.predictive)
+    return prior_param, posterior_param, predictive_param
+end
+
+# saving/ loading functions should be implemented outside of MCHammer itself
+
+function BayesianGenerator(prior_param::Tuple, posterior_param::Tuple, predictive_param::Tuple) #from whatever the output of unpack() is
+    prior = GeneratorParameterDistributions(number_of_states; α=prior_param[1], β=prior_param[2], αs=prior_param[3])
+    posterior = GeneratorParameterDistributions(number_of_states; α=posterior_param[1], β=posterior_param[2], αs=posterior_param[3])
+    # predictive = GeneratorPredictiveDistributions(....)
+    return BayesianGenerator(prior, posterior, predictive)
+end
