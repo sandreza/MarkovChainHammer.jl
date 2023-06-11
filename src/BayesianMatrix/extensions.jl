@@ -12,6 +12,36 @@ rand(Q::BayesianGenerator) = rand(Q.posterior)
 rand(Q::GeneratorParameterDistributions, n::Int) = [rand(Q) for i in 1:n]
 rand(Q::BayesianGenerator, n::Int) = [rand(Q) for i in 1:n]
 
+# extend Distributions 
+import Distributions.params
+
+function params(dist::GeneratorParameterDistributions)
+    number_of_states = size(dist.rates)[1]
+    α = zeros(number_of_states)
+    β = zeros(number_of_states)
+    αs = zeros(number_of_states-1, number_of_states)
+    for i in 1:number_of_states
+        α[i] = params(dist.rates[i])[1]
+        β[i] = 1/params(dist.rates[i])[2]
+        αs[:,i] = params(dist.exit_probabilities[i])[1]
+    end
+    return (; α, β, αs)
+end
+
+function params(dist::GeneratorPredictiveDistributions)
+    number_of_states = size(dist.holding_times)[1]
+    μ=zeros(number_of_states)
+    σ=zeros(number_of_states)
+    ξ=zeros(number_of_states)
+    n=zeros(Int64, number_of_states)
+    αs=zeros(number_of_states - 1, number_of_states)
+    for i in 1:number_of_states
+        μ[i], σ[i], ξ[i] = params(dist.holding_times[i])
+        n[i], αs[:,i] = params(dist.exit_counts[i])
+    end
+    return (; μ, σ, ξ, n, αs)
+end
+
 # Base.Statistics 
 import Statistics.mean, Statistics.var, Statistics.std
 mean(Q::BayesianGenerator) = mean(Q.posterior)
@@ -59,7 +89,7 @@ eigvals_distribution(Q::BayesianGenerator; samples=100) = eigvals_distribution(Q
 import Base.copy
 copy(Q::GeneratorParameterDistributions) = GeneratorParameterDistributions(copy(Q.rates), copy(Q.exit_probabilities))
 copy(Q::GeneratorPredictiveDistributions) = GeneratorPredictiveDistributions(copy(Q.holding_times), copy(Q.exit_counts))
-copy(Q::BayesianGenerator) = BayesianGenerator(copy(Q.prior), copy(Q.data), copy(Q.posterior), copy(Q.predictive))
+copy(Q::BayesianGenerator) = BayesianGenerator(copy(Q.prior), copy(Q.posterior), copy(Q.predictive))
 
 # Base.show
 import Base.show

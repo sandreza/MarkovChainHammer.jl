@@ -60,7 +60,6 @@ end
     end
 end
 
-
 @testset "Bayesian Matrix: Prior to Posterior" begin
     # test confidence with respect to same data
     markov_chain = [1 1 1 1 2 2 1 1 1 3 1 1]
@@ -84,11 +83,25 @@ end
     @test sum([sum(abs.((params.(Q21.posterior.rates)[i].-params.(Q12.posterior.rates)[i])[1])) for i in 1:3]) < eps(10.0)
 end
 
-
 @testset "Bayesian Matrix: Ensemble Functionality" begin
     data = [rand([1, 2, 3], 10) for i in 1:2]
     Q = BayesianGenerator(data)
     Q1 = BayesianGenerator(data[1])
     Q2 = BayesianGenerator(data[2], Q1.posterior)
     @test all( abs.(mean(Q) - mean(Q2)) .< eps(10.0))
+end
+
+@testset "Unpacking and Reconstructing" begin
+    # test confidence with respect to same data
+    markov_chain = [1 1 1 1 2 2 1 1 1 3 1 1]
+    Q1 = BayesianGenerator(markov_chain)
+    parameters = unpack(Q1)
+    Q2 = BayesianGenerator(parameters)
+    @test all(mean(Q1) .== mean(Q2))
+    @test all(var(Q1) .== var(Q2))
+    parameters_posterior = params(Q1.posterior)
+    parameters_posterior_2 = params(GeneratorParameterDistributions(parameters_posterior))
+    @test all(parameters_posterior.α .== parameters_posterior_2.α)
+    @test all(parameters_posterior.β .== parameters_posterior_2.β)
+    @test all(parameters_posterior.αs .== parameters_posterior_2.αs)
 end

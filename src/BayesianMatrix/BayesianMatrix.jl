@@ -8,12 +8,12 @@ import MarkovChainHammer.TransitionMatrix: holding_times, count_operator
 # export functions
 export BayesianGenerator, GeneratorParameterDistributions
 export eigen_distribution, eigvals_distribution
-export uninformative_prior
+export uninformative_prior 
+export params, unpack
 
 # general abstractions
-struct BayesianGenerator{PB,D,PA,PP}
+struct BayesianGenerator{PB,PA,PP}
     prior::PB
-    data::D
     posterior::PA
     predictive::PP
 end
@@ -29,7 +29,6 @@ struct GeneratorPredictiveDistributions{H,P}
 end
 
 include("constructors.jl")
-export uninformative_prior
 
 include("extensions.jl")
 

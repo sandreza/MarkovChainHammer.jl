@@ -48,17 +48,50 @@ The covariance is CoVar[X⃗ ⊗ X⃗] = Diagonal(α̃) - α̃ ⊗ α̃ / (α₀
 The variance Var(Xᵢ) = α̃ᵢ(1-α̃ᵢ) / (α₀ + 1) where α₀ = sum(αs).
 
 """
-function GeneratorParameterDistributions(number_of_states::Int; α=1, β=1, αs=ones(number_of_states - 1))
-    @assert length(αs) == number_of_states - 1
+function GeneratorParameterDistributions(number_of_states::Int;  α=ones(number_of_states), β=ones(number_of_states), αs=ones(number_of_states - 1, number_of_states))
+    if length(α) == 1 && length(β) == 1 
+        α = fill(α, number_of_states)
+        β = fill(β, number_of_states)
+        αs = repeat(αs, 1, number_of_states)
+    end
+    @assert size(αs)[1] == number_of_states - 1
+    @assert size(αs)[2] == size(α)[1] == size(β)[1] == number_of_states
     @assert all(αs .> 0)
-    @assert α > 0
-    @assert β > 0
+    @assert all(α .> 0)
+    @assert all(β .> 0)
     α = α
     β = β
-    θ = 1 / β
-    rates = [Gamma(α, θ) for i in 1:number_of_states]
-    exit_probabilities = [Dirichlet(αs) for i in 1:number_of_states]
+    θ = 1 ./ β
+    rates = [Gamma(α[i], θ[i]) for i in 1:number_of_states]
+    exit_probabilities = [Dirichlet(αs[:,i]) for i in 1:number_of_states]
     return GeneratorParameterDistributions(rates, exit_probabilities)
+end
+
+function GeneratorParameterDistributions(parameters::NamedTuple)
+    @assert haskey(parameters, :α)
+    @assert haskey(parameters, :β)
+    @assert haskey(parameters, :αs)
+    @assert length(parameters.α) == length(parameters.β) == length(parameters.αs[1,:]) == (length(parameters.αs[:,1])+1)
+    return GeneratorParameterDistributions(length(parameters.α), α=parameters.α, β=parameters.β, αs=parameters.αs)
+end
+
+function GeneratorPredictiveDistributions(number_of_states::Int; μ=ones(number_of_states), σ=ones(number_of_states), ξ=ones(number_of_states), n=ones(number_of_states), αs=ones(number_of_states - 1, number_of_states))
+    if length(μ) == 1 && length(σ) == 1
+        μ = fill(α, number_of_states)
+        σ = fill(β, number_of_states)
+        ξ = fill(ξ, number_of_states)
+        n = fill(n, number_of_states)
+        αs = repeat(αs, 1, number_of_states)
+    end
+    @assert size(αs)[1] == number_of_states - 1
+    @assert size(αs)[2] == size(μ)[1] == size(ξ)[1] == size(n)[1] == number_of_states
+    @assert all(αs .> 0)
+    @assert all(n .> 0)
+    @assert all(σ .> 0)
+
+    holding_times = [GeneralizedPareto(μ[i], σ[i], ξ[i]) for i in 1:number_of_states]
+    exit_counts = [DirichletMultinomial(n[i], αs[:,i]) for i in 1:number_of_states]
+    return GeneratorPredictiveDistributions(holding_times, exit_counts)
 end
 
 """
@@ -124,10 +157,10 @@ function BayesianGenerator(data, prior::GeneratorParameterDistributions; dt=1)
     end
     posterior = GeneratorParameterDistributions(posterior_rates, posterior_exit_probabilities)
     predictive = GeneratorPredictiveDistributions(predictive_holding_times, predictive_exit_counts)
-    return BayesianGenerator(prior, data, posterior, predictive)
+    return BayesianGenerator(prior, posterior, predictive)
 end
 
-BayesianGenerator(prior::GeneratorParameterDistributions) = BayesianGenerator(prior, nothing, prior, nothing)
+BayesianGenerator(prior::GeneratorParameterDistributions) = BayesianGenerator(prior, prior, nothing)
 BayesianGenerator(data; dt = 1) = BayesianGenerator(data,  uninformative_prior(maximum(data)) ; dt=dt)
 
 """
@@ -157,5 +190,63 @@ function BayesianGenerator(data::Vector{Vector{Int64}}, prior::GeneratorParamete
 end
 BayesianGenerator(data::Vector{Vector{Int64}}; dt=1) = BayesianGenerator(data, uninformative_prior(maximum(reduce(vcat, data))); dt=dt)
 
+"""
+    BayesianGenerator(parameters::NamedTuple)
 
+Construct a BayesianGenerator object from a NamedTuple of parameters.
+
+# Arguments
+- `parameters::NamedTuple`: A NamedTuple containing the parameters for the BayesianGenerator object. Must contain the fields `prior`, `posterior` and `predictive`, each of which must be a NamedTuple containing the parameters for the respective distributions.
+
+# Returns
+- `BayesianGenerator`: A BayesianGenerator object constructed from the parameters. Contains the posterior distributions for the rates and exit probabilities, as well as the predictive distributions for the holding times and exit counts.
+
+"""
+function BayesianGenerator(parameters::NamedTuple) 
+    @assert haskey(parameters, :prior)
+    @assert haskey(parameters, :posterior)
+    @assert haskey(parameters, :predictive)
+
+    number_of_states = length(parameters.prior.α)
+    prior = GeneratorParameterDistributions(number_of_states; α=parameters.prior.α, β=parameters.prior.β, αs=parameters.prior.αs)
+    posterior = GeneratorParameterDistributions(number_of_states; α=parameters.posterior.α, β=parameters.posterior.β, αs=parameters.posterior.αs)
+    predictive = GeneratorPredictiveDistributions(number_of_states; μ=parameters.predictive.μ, σ=parameters.predictive.σ, ξ=parameters.predictive.ξ, n=parameters.predictive.n, αs=parameters.predictive.αs)
+    return BayesianGenerator(prior, posterior, predictive)
+end
+
+"""
+    uninformative_prior(number_of_states; scale=eps(1e2))
+
+Construct an uninformative prior distribution for a BayesianGenerator object.
+
+# Arguments
+- `number_of_states::Int`: The number of states in the BayesianGenerator object.
+
+# Keyword Arguments
+
+- `scale::Number=eps(1e2)`: The scale parameter for the Gamma and Dirichlet distributions.
+
+# Returns
+- `GeneratorParameterDistributions`: An uninformative prior distribution for a BayesianGenerator object.
+
+"""
 uninformative_prior(number_of_states; scale=eps(1e2)) = GeneratorParameterDistributions(number_of_states::Int; α=scale, β=scale, αs=ones(number_of_states - 1) * scale)
+
+"""
+    unpack(Q::BayesianGenerator)
+
+Unpack a BayesianGenerator object into its parameters.
+
+# Arguments
+- `Q::BayesianGenerator`: The BayesianGenerator object to unpack.
+
+# Returns
+- `Tuple{NamedTuple{(:prior, :posterior, :predictive),Tuple{NamedTuple{(:α, :β, :αs),Tuple{Vector{Float64},Vector{Float64},Vector{Float64}}},NamedTuple{(:α, :β, :αs),Tuple{Vector{Float64},Vector{Float64},Vector{Float64}}},NamedTuple{(:μ, :σ, :ξ, :n, :αs),Tuple{Vector{Float64},Vector{Float64},Vector{Float64},Vector{Int64},Vector{Vector{Float64}}}}}}}`: A tuple containing the parameters for the prior, posterior and predictive distributions.
+
+"""
+function unpack(Q::BayesianGenerator)
+    prior = params(Q.prior)
+    posterior = params(Q.posterior)
+    predictive = params(Q.predictive)
+    return (; prior, posterior, predictive)
+end
