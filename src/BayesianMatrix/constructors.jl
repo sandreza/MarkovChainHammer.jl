@@ -156,42 +156,6 @@ end
 BayesianGenerator(prior::GeneratorParameterDistributions) = BayesianGenerator(prior, prior, nothing)
 BayesianGenerator(data; dt = 1) = BayesianGenerator(data,  uninformative_prior(maximum(data)) ; dt=dt)
 
-uninformative_prior(number_of_states; scale=eps(1e2)) = GeneratorParameterDistributions(number_of_states::Int; α=scale, β=scale, αs=ones(number_of_states - 1) * scale)
-
-function parameters(dist::GeneratorParameterDistributions)
-    number_of_states = size(dist.rates)[1]
-    α = zeros(number_of_states)
-    β = zeros(number_of_states)
-    αs = zeros(number_of_states-1, number_of_states)
-    for i in 1:number_of_states
-        α[i] = params(dist.rates[i])[1]
-        β[i] = 1/params(dist.rates[i])[2]
-        αs[:,i] = params(dist.exit_probabilities[i])[1]
-    end
-    return (; α, β, αs)
-end
-
-function parameters(dist::GeneratorPredictiveDistributions)
-    number_of_states = size(dist.holding_times)[1]
-    μ=zeros(number_of_states)
-    σ=zeros(number_of_states)
-    ξ=zeros(number_of_states)
-    n=zeros(Int64, number_of_states)
-    αs=zeros(number_of_states - 1, number_of_states)
-    for i in 1:number_of_states
-        μ[i], σ[i], ξ[i] = params(dist.holding_times[i])
-        n[i], αs[:,i] = params(dist.exit_counts[i])
-    end
-    return (; μ, σ, ξ, n, αs)
-end
-
-function unpack(Q::BayesianGenerator)
-    prior = parameters(Q.prior)
-    posterior = parameters(Q.posterior)
-    predictive = parameters(Q.predictive)
-    return (; prior, posterior, predictive)
-end
-
 function BayesianGenerator(parameters::NamedTuple) 
     @assert haskey(parameters, :prior)
     @assert haskey(parameters, :posterior)
@@ -202,4 +166,13 @@ function BayesianGenerator(parameters::NamedTuple)
     posterior = GeneratorParameterDistributions(number_of_states; α=parameters.posterior.α, β=parameters.posterior.β, αs=parameters.posterior.αs)
     predictive = GeneratorPredictiveDistributions(number_of_states; μ=parameters.predictive.μ, σ=parameters.predictive.σ, ξ=parameters.predictive.ξ, n=parameters.predictive.n, αs=parameters.predictive.αs)
     return BayesianGenerator(prior, posterior, predictive)
+end
+
+uninformative_prior(number_of_states; scale=eps(1e2)) = GeneratorParameterDistributions(number_of_states::Int; α=scale, β=scale, αs=ones(number_of_states - 1) * scale)
+
+function unpack(Q::BayesianGenerator)
+    prior = params(Q.prior)
+    posterior = params(Q.posterior)
+    predictive = params(Q.predictive)
+    return (; prior, posterior, predictive)
 end
