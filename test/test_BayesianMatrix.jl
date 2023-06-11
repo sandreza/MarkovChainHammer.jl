@@ -84,27 +84,13 @@ end
     @test sum([sum(abs.((params.(Q21.posterior.rates)[i].-params.(Q12.posterior.rates)[i])[1])) for i in 1:3]) < eps(10.0)
 end
 
-
-@testset "Bayesian Matrix: Unpacking" begin
+@testset "Bayesian Matrix: Unpacking and Reconstructing" begin
     # test confidence with respect to same data
     markov_chain = [1 1 1 1 2 2 1 1 1 3 1 1]
-    prior = GeneratorParameterDistributions(3)
-    Q1 = BayesianGenerator(prior)
-    Q2 = BayesianGenerator(markov_chain, prior)
-    Q3 = BayesianGenerator(markov_chain, Q2.posterior)
-    @test all(var(Q1) .> var(Q2))
-    @test all(var(Q2) .> var(Q3))
-    # test ordering
-    markov_chain1 = [1 1 1 1 2 2 1 1 1 3 1 1]
-    markov_chain2 = [1 2 1 2 1 3 1 3 2 2 1]
-
-    prior = GeneratorParameterDistributions(3)
-    Q1 = BayesianGenerator(markov_chain1, prior)
-    Q2 = BayesianGenerator(markov_chain2, prior)
-    Q21 = BayesianGenerator(markov_chain2, Q1.posterior)
-    Q12 = BayesianGenerator(markov_chain1, Q2.posterior)
-
-    @test sum([sum(abs.((params.(Q21.posterior.exit_probabilities)[i].-params.(Q12.posterior.exit_probabilities)[i])[1])) for i in 1:3]) .< eps(10.0)
-    @test sum([sum(abs.((params.(Q21.posterior.rates)[i].-params.(Q12.posterior.rates)[i])[1])) for i in 1:3]) < eps(10.0)
+    Q1 = BayesianGenerator(markov_chain)
+    parameters = unpack(Q1)
+    Q2 = BayesianGenerator(parameters)
+    @test all(mean(Q1) .== mean(Q2))
+    @test all(var(Q1) .== var(Q2))
 end
 
