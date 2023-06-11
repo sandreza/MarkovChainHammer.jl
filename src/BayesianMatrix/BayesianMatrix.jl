@@ -28,7 +28,7 @@ struct GeneratorPredictiveDistributions{H,P}
 end
 
 include("constructors.jl")
-export uninformative_prior
+export uninformative_prior, parameters, unpack
 
 include("extensions.jl")
 

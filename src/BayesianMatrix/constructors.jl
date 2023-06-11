@@ -176,7 +176,7 @@ function parameters(dist::GeneratorPredictiveDistributions)
     μ=zeros(number_of_states)
     σ=zeros(number_of_states)
     ξ=zeros(number_of_states)
-    n=zeros(number_of_states)
+    n=zeros(Int64, number_of_states)
     αs=zeros(number_of_states - 1, number_of_states)
     for i in 1:number_of_states
         μ[i], σ[i], ξ[i] = params(dist.holding_times[i])
@@ -192,7 +192,12 @@ function unpack(Q::BayesianGenerator)
     return (; prior, posterior, predictive)
 end
 
-function BayesianGenerator(parameters::NamedTuple) #takes output of unpack, repackages it
+function BayesianGenerator(parameters::NamedTuple) 
+    @assert haskey(parameters, :prior)
+    @assert haskey(parameters, :posterior)
+    @assert haskey(parameters, :predictive)
+
+    number_of_states = length(parameters.prior.α)
     prior = GeneratorParameterDistributions(number_of_states; α=parameters.prior.α, β=parameters.prior.β, αs=parameters.prior.αs)
     posterior = GeneratorParameterDistributions(number_of_states; α=parameters.posterior.α, β=parameters.posterior.β, αs=parameters.posterior.αs)
     predictive = GeneratorPredictiveDistributions(number_of_states; μ=parameters.predictive.μ, σ=parameters.predictive.σ, ξ=parameters.predictive.ξ, n=parameters.predictive.n, αs=parameters.predictive.αs)
