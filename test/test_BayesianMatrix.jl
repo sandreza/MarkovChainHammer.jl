@@ -84,7 +84,7 @@ end
     @test sum([sum(abs.((params.(Q21.posterior.rates)[i].-params.(Q12.posterior.rates)[i])[1])) for i in 1:3]) < eps(10.0)
 end
 
-@testset "Bayesian Matrix: Unpacking and Reconstructing" begin
+@testset "Unpacking and Reconstructing" begin
     # test confidence with respect to same data
     markov_chain = [1 1 1 1 2 2 1 1 1 3 1 1]
     Q1 = BayesianGenerator(markov_chain)
@@ -92,5 +92,10 @@ end
     Q2 = BayesianGenerator(parameters)
     @test all(mean(Q1) .== mean(Q2))
     @test all(var(Q1) .== var(Q2))
+    parameters_posterior = params(Q1.posterior)
+    parameters_posterior_2 = params(GeneratorParameterDistributions(parameters_posterior))
+    @test all(parameters_posterior.α .== parameters_posterior_2.α)
+    @test all(parameters_posterior.β .== parameters_posterior_2.β)
+    @test all(parameters_posterior.αs .== parameters_posterior_2.αs)
 end
 

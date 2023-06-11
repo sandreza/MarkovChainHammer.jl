@@ -48,7 +48,6 @@ The covariance is CoVar[X⃗ ⊗ X⃗] = Diagonal(α̃) - α̃ ⊗ α̃ / (α₀
 The variance Var(Xᵢ) = α̃ᵢ(1-α̃ᵢ) / (α₀ + 1) where α₀ = sum(αs).
 
 """
-
 function GeneratorParameterDistributions(number_of_states::Int;  α=ones(number_of_states), β=ones(number_of_states), αs=ones(number_of_states - 1, number_of_states))
     if length(α) == 1 && length(β) == 1 
         α = fill(α, number_of_states)
@@ -66,6 +65,14 @@ function GeneratorParameterDistributions(number_of_states::Int;  α=ones(number_
     rates = [Gamma(α[i], θ[i]) for i in 1:number_of_states]
     exit_probabilities = [Dirichlet(αs[:,i]) for i in 1:number_of_states]
     return GeneratorParameterDistributions(rates, exit_probabilities)
+end
+
+function GeneratorParameterDistributions(parameters::NamedTuple)
+    @assert haskey(parameters, :α)
+    @assert haskey(parameters, :β)
+    @assert haskey(parameters, :αs)
+    @assert length(parameters.α) == length(parameters.β) == length(parameters.αs[1,:]) == (length(parameters.αs[:,1])+1)
+    return GeneratorParameterDistributions(length(parameters.α), α=parameters.α, β=parameters.β, αs=parameters.αs)
 end
 
 function GeneratorPredictiveDistributions(number_of_states::Int; μ=ones(number_of_states), σ=ones(number_of_states), ξ=ones(number_of_states), n=ones(number_of_states), αs=ones(number_of_states - 1, number_of_states))
