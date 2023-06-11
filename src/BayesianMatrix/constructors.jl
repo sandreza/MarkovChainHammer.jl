@@ -190,7 +190,6 @@ function BayesianGenerator(data::Vector{Vector{Int64}}, prior::GeneratorParamete
 end
 BayesianGenerator(data::Vector{Vector{Int64}}; dt=1) = BayesianGenerator(data, uninformative_prior(maximum(reduce(vcat, data))); dt=dt)
 
-
 """
     BayesianGenerator(parameters::NamedTuple)
 

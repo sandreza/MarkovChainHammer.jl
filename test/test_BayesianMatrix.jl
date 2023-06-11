@@ -60,7 +60,6 @@ end
     end
 end
 
-
 @testset "Bayesian Matrix: Prior to Posterior" begin
     # test confidence with respect to same data
     markov_chain = [1 1 1 1 2 2 1 1 1 3 1 1]
@@ -106,4 +105,3 @@ end
     @test all(parameters_posterior.β .== parameters_posterior_2.β)
     @test all(parameters_posterior.αs .== parameters_posterior_2.αs)
 end
-
