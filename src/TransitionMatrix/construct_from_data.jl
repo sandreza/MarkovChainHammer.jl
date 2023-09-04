@@ -1,5 +1,7 @@
 using Statistics
 
+export perron_frobenius, generator, holding_times
+
 function count_operator(markov_chain, number_of_states)
     count_matrix = zeros(typeof(markov_chain[1]), number_of_states, number_of_states)
     for i in 1:length(markov_chain)-1
@@ -64,7 +66,7 @@ perron_frobenius(markov_chain; step = 1) = perron_frobenius(markov_chain, maximu
 - `holding_times::Vector{Vector{Real}}`: A vector of vectors of holding times for each state.
 """
 function holding_times(markov_chain, number_of_states; dt=1)
-    holding_times = [[] for n in 1:number_of_states]
+    holding_times = [typeof(dt)[] for n in 1:number_of_states]
     push!(holding_times[markov_chain[1]], dt)
     M = length(markov_chain)
     for i in 2:M

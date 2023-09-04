@@ -1,6 +1,41 @@
 using MarkovChainHammer, Test, Revise, Random, LinearAlgebra
+using MarkovChainHammer.Utils
 import MarkovChainHammer.Utils: histogram
 import MarkovChainHammer.Utils: autocovariance
+
+@testset "utilities: scaled_entropy" begin
+    for N in [10, 100, 123]
+        p = ones(N) ./ N
+        @test scaled_entropy(p) ≈ 1.0
+    end
+    p = [1.0, 0.0, 0.0]
+    @test scaled_entropy(p) ≈ 0.0
+    p = [0.5, 0.5, 0.0]
+    @test scaled_entropy(p) ≈ -log(0.5) / log(3)
+end
+
+@testset "utilities: steady state" begin
+    Q = [-1.0 1.0; 1.0 -1.0]
+    p = steady_state(Q)
+    @test all(p .≈ [0.5, 0.5])
+    p = steady_state(exp(Q))
+    @test all(p .≈ [0.5, 0.5])
+end
+
+@testset "utilities: koopman_modes" begin
+    Q = [-1.0 2.0; 1.0 -2.0]
+    p = steady_state(Q)
+    km = koopman_modes(Q)
+    @test abs(km[1, :]' * p) < 100 * eps(1.0)
+end
+
+@testset "utilities: decorrelation times" begin
+    Q = [-1.0 2.0; 1.0 -2.0]
+    Λ = eigvals(Q)
+    D = decorrelation_times(Q)
+    @test D[end] == Inf
+    @test D[1] == 1 / Λ[1]
+end
 
 @testset "Histogram Test: uniform weight" begin
     timeserieslist = [1 2 2 3 3 3 4 4 4 4 5 5 5 5 5]
