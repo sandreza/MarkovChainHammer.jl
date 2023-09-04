@@ -1,4 +1,4 @@
-module BayesianMatrix
+@reexport module BayesianMatrix
 
 using Distributions, LinearAlgebra, Random, Statistics
 

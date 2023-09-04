@@ -1,4 +1,4 @@
-module Utils
+@reexport module Utils
 
 include("histogram.jl")
 include("statistics.jl")

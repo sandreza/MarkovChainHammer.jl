@@ -1,5 +1,7 @@
 using Distributions, LinearAlgebra, Random
 
+export generate
+
 # Define the jump map
 function next_state(current_state_index::Int, cT)
     vcT = view(cT, :, current_state_index)
