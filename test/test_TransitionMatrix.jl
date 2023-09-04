@@ -1,7 +1,6 @@
 using MarkovChainHammer, Test, Revise, LinearAlgebra
 import MarkovChainHammer.TransitionMatrix: count_operator, generator, holding_times, perron_frobenius
 import MarkovChainHammer.TransitionMatrix: symmetric_generator, symmetric_perron_frobenius
-import MarkovChainHammer.TransitionMatrix: entropy, steady_state, koopman_modes, decorrelation_times
 
 @testset "Column Sum Consistency" begin
     timeseries = [1, 1, 1, 2, 2, 3, 3, 3, 2, 1]
@@ -152,38 +151,4 @@ end
     @test all(generator_computed1 .== generator_computed2)
     @test all(generator_computed2 .== generator_computed3)
     @test all(generator_computed1 .== (0.5 * generator_computed4))
-end
-
-@testset "utilities: entropy" begin
-    for N in [10, 100, 123]
-        p = ones(N) ./ N
-        @test entropy(p) ≈ 1.0
-    end
-    p = [1.0, 0.0, 0.0]
-    @test entropy(p) ≈ 0.0
-    p = [0.5, 0.5, 0.0]
-    @test entropy(p) ≈ -log(0.5) / log(3)
-end
-
-@testset "utilities: steady state" begin
-    Q = [-1.0 1.0; 1.0 -1.0]
-    p = steady_state(Q)
-    @test all(p .≈ [0.5, 0.5])
-    p = steady_state(exp(Q))
-    @test all(p .≈ [0.5, 0.5])
-end
-
-@testset "utilities: koopman_modes" begin
-    Q = [-1.0 2.0; 1.0 -2.0]
-    p = steady_state(Q)
-    km = koopman_modes(Q)
-    @test abs(km[1, :]' * p) < 100 * eps(1.0)
-end
-
-@testset "utilities: decorrelation times" begin
-    Q = [-1.0 2.0; 1.0 -2.0]
-    Λ = eigvals(Q)
-    D = decorrelation_times(Q)
-    @test D[end] == Inf
-    @test D[1] == 1 / Λ[1]
 end
