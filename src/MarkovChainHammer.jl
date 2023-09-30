@@ -30,6 +30,10 @@ include("Utils/Utils.jl")
         markov_chain_2 = generate(Q, 100)
         Qᴿ, Qⱽ = decomposition(Qm)
         E, R = exit_rate(Qm)
+        Q = ornstein_uhlenbeck_generator(3)
+        A = central_advection_periodic(3)
+        Δ = discrete_laplacian_periodic(3)
+        a = histogram(markov_chain)
     end
 end
 
