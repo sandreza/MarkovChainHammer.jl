@@ -28,6 +28,8 @@ include("Utils/Utils.jl")
         τs = decorrelation_times(Q)
         ht = holding_times(markov_chain)
         markov_chain_2 = generate(Q, 100)
+        Qᴿ, Qⱽ = decomposition(Qm)
+        E, R = exit_rate(Qm)
     end
 end
 
