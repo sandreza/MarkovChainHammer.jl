@@ -84,3 +84,39 @@ end
     @test all(ac .< eps(100.0))
 end
 
+@testset "Special Matrices" begin 
+    Q = ornstein_uhlenbeck_generator(3)
+    Qexact = [-1.0   0.5   0.0; 1.0  -1.0   1.0; 0.0   0.5  -1.0]
+    @test all((Q .- Qexact) .≈ 0.0)
+    A = central_advection_periodic(4)
+    A_exact = -[  0.0   0.5   0.0  -0.5; -0.5   0.0   0.5   0.0; 0.0  -0.5   0.0   0.5; 0.5   0.0  -0.5   0.0]
+    @test all((A .- A_exact) .≈ 0.0)
+    Δ = discrete_laplacian_periodic(3)
+    Δ_exact = [-2.0 1.0 1.0; 1.0 -2.0 1.0; 1.0 1.0 -2.0]
+    @test all((Δ .- Δ_exact) .≈ 0.0)
+end
+
+@testset "Decomposition Test" begin
+    for N in [3, 5, 7, 10]
+        Q = ornstein_uhlenbeck_generator(N)
+        E, R = exit_rate(Q)
+        @test all(Q .≈ E * R)
+        @test all([R[i,i] .≈ (N-1)/2 for i in 1:N])
+        Qᴿ, Qⱽ = decomposition(Q)
+        @test all(Qᴿ .≈ Q)
+        @test norm(Qⱽ) ≤ eps(100.0 * N^2)
+        @test all(Q .≈ Qᴿ + Qⱽ)
+    end
+
+    for N in [3, 5, 7, 10]
+        advection = central_advection_periodic(N)
+        diffusion = discrete_laplacian_periodic(N)
+        Q = advection + diffusion
+        E, R = exit_rate(Q)
+        @test all(Q .≈ E * R)
+        Qᴿ, Qⱽ = decomposition(Q)
+        @test all(Qᴿ .≈ diffusion)
+        @test all(norm(Qⱽ - advection) ≤ eps(100.0))
+    end
+end
+

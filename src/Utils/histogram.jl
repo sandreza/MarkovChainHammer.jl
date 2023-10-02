@@ -1,3 +1,5 @@
+export histogram
+
 """
     histogram(array, bins=minimum([100, length(array)]), normalization=:uniform, custom_range=false)
 
