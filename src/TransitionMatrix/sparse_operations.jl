@@ -23,6 +23,21 @@ end
 
 sparse_count_operator(markov_chain) = sparse_count_operator(markov_chain, maximum(markov_chain))
 
+"""
+sparse_perron_frobenius(markov_chain; step = 1)
+
+# Description 
+    Calculate the perron-frobenius matrix from a markov chain in sparse format
+
+# Arguments
+- `markov_chain::AbstractVector`: A vector of integers representing the state of a markov chain at each time step.
+
+# Keyword Arguments
+- `step::Integer=1`: The step size of the constructed operator.
+
+# Returns
+- `perron_frobenius_matrix::Matrix`: The perron-frobenius matrix of the markov chain in sparse format
+"""
 function sparse_perron_frobenius(partitions::Vector{S}; step = 1) where S
     number_of_states = maximum(partitions)
     count_matrix = sparse_count_operator(partitions, number_of_states, step)
@@ -37,6 +52,21 @@ function sparse_perron_frobenius(partitions::Vector{S}; step = 1) where S
     return perron_frobenius_matrix
 end
 
+"""
+sparse_generator(markov_chain; dt = 1)
+
+# Description 
+    Calculate the generator matrix from a markov chain in sparse format
+
+# Arguments
+- `markov_chain::AbstractVector`: A vector of integers representing the state of a markov chain at each time step.
+
+# Keyword Arguments
+- `dt::Real=1`: The time step of the constructed operator.
+
+# Returns
+- `generator_matrix::Matrix`: The generator matrix of the markov chain in sparse format
+"""
 function sparse_generator(partitions::Vector{S}; dt = 1) where S
     number_of_states = maximum(partitions)
     count_matrix = sparse_count_operator(partitions, number_of_states)
