@@ -53,7 +53,7 @@ end
 - `Q::Matrix`: The generator matrix or transition matrix.
 
 # Returns
-- `V⁻¹::Matrix`: The koopman modes of the generator matrix. Each row is a koopman mode
+- `W::Matrix`: The koopman modes of the generator matrix. Each column is a koopman mode
 """
 function koopman_modes(Q)
     Λ, W = eigen(Q')
