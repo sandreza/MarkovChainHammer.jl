@@ -1,5 +1,5 @@
 using MarkovChainHammer, Test, Revise, LinearAlgebra
-import MarkovChainHammer.TransitionMatrix: count_operator, generator, holding_times, perron_frobenius
+import MarkovChainHammer.TransitionMatrix: count_operator, generator, holding_times, perron_frobenius, sparse_count_operator
 import MarkovChainHammer.TransitionMatrix: symmetric_generator, symmetric_perron_frobenius
 
 @testset "Column Sum Consistency" begin
@@ -151,4 +151,23 @@ end
     @test all(generator_computed1 .== generator_computed2)
     @test all(generator_computed2 .== generator_computed3)
     @test all(generator_computed1 .== (0.5 * generator_computed4))
+end
+
+@testset "Hand Constructed: Default Case Sparse Check" begin
+    # default case. See all states in timeseries
+    timeseries = [1, 1, 1, 2, 2, 3, 3, 3, 2, 1]
+    count_operator_exact = [2.0 1.0 0.0; 1.0 1.0 1.0; 0.0 1.0 2.0]
+    generator_exact = [-1/2 1/3 0.0; 1/2 -2/3 1/3; 0.0 1/3 -1/3]
+    perron_frobenius_exact = [2/3 1/3 0.0; 1/3 1/3 1/3; 0.0 1/3 2/3]
+    perron_frobenius_exact_2step = [1/3 0 1/3; 2/3 0 1/3; 0 1 1/3]
+
+    count_operator_computed = sparse_count_operator(timeseries)
+    generator_computed = sparse_generator(timeseries)
+    perron_frobenius_computed = sparse_perron_frobenius(timeseries)
+    perron_frobenius_computed_2step = sparse_perron_frobenius(timeseries; step = 2)
+
+    @test all(count_operator_exact .== count_operator_computed)
+    @test all(generator_exact .== generator_computed)
+    @test all(perron_frobenius_exact .== perron_frobenius_computed)
+    @test all(perron_frobenius_exact_2step .== perron_frobenius_computed_2step)
 end
