@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Convergence of Generators · Markov Chain Hammer</title><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../../">Markov Chain Hammer</a></span></div><form class="docs-search" action="../../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox" checked/><label class="tocitem" for="menuitem-2"><span class="docs-label">API</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../overview/">Overview</a></li><li><input class="collapse-toggle" id="menuitem-2-2" type="checkbox"/><label class="tocitem" for="menuitem-2-2"><span class="docs-label">Discrete Time</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../Discrete Time/transfer_operators/">Transfer Operators and Markov Chains</a></li><li><a class="tocitem" href="../../Discrete Time/empirical_transfer_operators/">Data-driven Transfer Operators</a></li><li><a class="tocitem" href="../../Discrete Time/convergence/">Convergence of Transfer Operators</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-2-3" type="checkbox" checked/><label class="tocitem" for="menuitem-2-3"><span class="docs-label">Continuous Time</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../generators/">Generators</a></li><li><a class="tocitem" href="../empirical_generator/">Empirical Generator</a></li><li class="is-active"><a class="tocitem" href>Convergence of Generators</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-2-4" type="checkbox"/><label class="tocitem" for="menuitem-2-4"><span class="docs-label">Uncertainty Quantification</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../Uncertainty Quantification/bayesian_empirical_generator/">Bayesian Empirical Generator</a></li><li><a class="tocitem" href="../../Uncertainty Quantification/constructing_prior/">Constructing Prior Distributions</a></li><li><a class="tocitem" href="../../Uncertainty Quantification/sampling/">Sampling from the Bayesian Generator</a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox"/><label class="tocitem" for="menuitem-3"><span class="docs-label">Modules</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../Modules/module_overview/">Overview</a></li><li><a class="tocitem" href="../../../Modules/transition_matrix/">TransitionMatrix</a></li><li><a class="tocitem" href="../../../Modules/bayesian_matrix/">BayesianMatrix</a></li><li><a class="tocitem" href="../../../Modules/trajectory/">Trajectory</a></li><li><a class="tocitem" href="../../../Modules/clustering/">Clustering</a></li><li><a class="tocitem" href="../../../Modules/utils/">Utils</a></li></ul></li><li><a class="tocitem" href="../../../function_index/">Function Index</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">API</a></li><li><a class="is-disabled">Continuous Time</a></li><li class="is-active"><a href>Convergence of Generators</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Convergence of Generators</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/sandreza/MarkovChainHammer.jl/blob/main/docs/src/API/Continuous Time/convergence.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="sec:generator_convergence"><a class="docs-heading-anchor" href="#sec:generator_convergence">Convergence of Generators</a><a id="sec:generator_convergence-1"></a><a class="docs-heading-anchor-permalink" href="#sec:generator_convergence" title="Permalink"></a></h1><p>Convergence of a generator from data is more subtle than the convergence of a transfer operator from data due to the presence of time scales in the former.  For a fixed timestep size <span>$\Delta t$</span> and infinite data we have convergence to the associated transfer operator. Thus we take the limit of <span>$\Delta t \rightarrow 0$</span> afterwards to get convergence to the generator. </p><p>Given the exact generator</p><pre><code class="language-julia hljs">Q_exact = [-1.0 2.0; 1.0 -2.0]
+Q_exact</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2×2 Matrix{Float64}:
+ -1.0   2.0
+  1.0  -2.0</code></pre><p>We generate a Markov chains of increasing size at a fixed timestep <span>$dt$</span> and compute the empirical transition matrix. We then verify that the empirical transition matrix converges to the exact transition operator. Let us first generate a Markov chain of size 100.</p><pre><code class="language-julia hljs">using MarkovChainHammer.Trajectory: generate
+dt = 1.0
+steps = 100
+markov_chain = generate(Q_exact, steps; dt=dt);</code></pre><p>We now load the empirical operator constructors for both the generator and the transfer operator in order to seperately check for convergence. </p><p>First let us construct the transfer operator</p><pre><code class="language-julia hljs">using MarkovChainHammer.TransitionMatrix: perron_frobenius
+ℳ_empirical = perron_frobenius(markov_chain)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2×2 Matrix{Float64}:
+ 0.625  0.657143
+ 0.375  0.342857</code></pre><p>We see that the above matrix is close to the exact transfer operator</p><pre><code class="language-julia hljs">ℳ_exact = exp(Q_exact)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2×2 Matrix{Float64}:
+ 0.683262  0.633475
+ 0.316738  0.366525</code></pre><p>Now let us construct the generator</p><pre><code class="language-julia hljs">using MarkovChainHammer.TransitionMatrix: generator
+Q_empirical = generator(markov_chain; dt = dt)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2×2 Matrix{Float64}:
+ -0.375   0.666667
+  0.375  -0.666667</code></pre><p>We see that the above matrix is quite far from the exact generator, which leads to the question &quot;what happened?&quot;. The resolution to this dilemma is to observe that timescales of the markov chain were too large as compared to the expected holding times of the exact generator, which are 1.0 for state 1 and <span>$1/2$</span> for state 2. If the chain is instead generated with smaller timesteps </p><pre><code class="language-julia hljs">dt = 0.1
+markov_chain = generate(Q_exact, steps; dt=dt);
+Q_empirical = generator(markov_chain; dt = dt)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2×2 Matrix{Float64}:
+ -0.694444   1.42857
+  0.694444  -1.42857</code></pre><p>We can see that the estimate of the generator has improved. Note that we can also calculate the generator by taking the matrix logarithm and dividing by the timescale to get a similar answer</p><pre><code class="language-julia hljs">log(perron_frobenius(markov_chain)) / dt</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2×2 Matrix{Float64}:
+ -0.628269   1.59311
+  0.628269  -1.59311</code></pre><p>Let us now automate the process of checking convergence as function of fixed timestep size. We generate a Markov chain of increasing size and compute the empirical transition matrix. We then verify that the empirical transition matrix converges to the exact transition operator. We use the function <code>norm</code> from the <code>LinearAlgebra</code> package to compute the norm of the difference between the empirical and exact transition matrices. We use the difference between the matrices divided by the norm of the exact matrix to get a relative error. At small timesteps the transfer operator converges to the identity matrix, hence we divide the error by a factor of <span>$dt$</span> in order to make a fair comparison to the relative error of the generator matrix. The takeaway message is that the error of the generator is bounded by both the timestep size and the available number of independent samples in the data. Here is the code to verify this statement</p><pre><code class="language-julia hljs">using LinearAlgebra: norm
+println(&quot;Transfer Operator Convergence&quot;)
+for dt in [1.0, 0.1, 0.01, 0.001]
+    ℳ_exact_local = exp(Q_exact * dt)
+    println(&quot;For a timestep of $dt&quot;)
+    for i in 2:2:6
+        n = 10^i
+        markov_chain_local = generate(ℳ_exact_local, n)
+        number_of_states = 2
+        ℳ_empirical_local = perron_frobenius(markov_chain_local, number_of_states)
+        empirical_error = norm(ℳ_empirical_local - ℳ_exact_local) / norm(ℳ_exact_local) / dt
+        println(&quot;A chain of size 10^$i yields a relative empirical error of $(empirical_error)&quot;)
+    end
+    println(&quot;---------------------------&quot;)
+end
+
+println(&quot;---------------------------&quot;)
+println(&quot;Generator Convergence&quot;)
+for dt in [1.0, 0.1, 0.01, 0.001]
+    ℳ_exact_local = exp(Q_exact * dt)
+    println(&quot;For a timestep of $dt&quot;)
+    for i in 2:2:6
+        n = 10^i
+        markov_chain_local = generate(ℳ_exact_local, n)
+        number_of_states = 2
+        Q_empirical_local = generator(markov_chain_local, number_of_states; dt = dt)
+        empirical_error = norm(Q_empirical_local - Q_exact) / norm(Q_exact)
+        println(&quot;A chain of size 10^$i yields a relative empirical error of $(empirical_error)&quot;)
+    end
+    println(&quot;---------------------------&quot;)
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Transfer Operator Convergence
+For a timestep of 1.0
+A chain of size 10^2 yields a relative empirical error of 0.2052272765020095
+A chain of size 10^4 yields a relative empirical error of 0.0009399099727159542
+A chain of size 10^6 yields a relative empirical error of 0.00044363459027215016
+---------------------------
+For a timestep of 0.1
+A chain of size 10^2 yields a relative empirical error of 0.6406130397167876
+A chain of size 10^4 yields a relative empirical error of 0.024372108654314568
+A chain of size 10^6 yields a relative empirical error of 0.00969501376207933
+---------------------------
+For a timestep of 0.01
+A chain of size 10^2 yields a relative empirical error of 13.527939471702238
+A chain of size 10^4 yields a relative empirical error of 0.1376897600902883
+A chain of size 10^6 yields a relative empirical error of 0.024057157177490955
+---------------------------
+For a timestep of 0.001
+A chain of size 10^2 yields a relative empirical error of 2.2360632258701383
+A chain of size 10^4 yields a relative empirical error of 1.3390790093116096
+A chain of size 10^6 yields a relative empirical error of 0.06102579821063059
+---------------------------
+---------------------------
+Generator Convergence
+For a timestep of 1.0
+A chain of size 10^2 yields a relative empirical error of 0.6603436539783516
+A chain of size 10^4 yields a relative empirical error of 0.6791138371288149
+A chain of size 10^6 yields a relative empirical error of 0.6838007838954553
+---------------------------
+For a timestep of 0.1
+A chain of size 10^2 yields a relative empirical error of 1.3652450841832677
+A chain of size 10^4 yields a relative empirical error of 0.139696015339922
+A chain of size 10^6 yields a relative empirical error of 0.13947707201691414
+---------------------------
+For a timestep of 0.01
+A chain of size 10^2 yields a relative empirical error of 1.8027440423029175
+A chain of size 10^4 yields a relative empirical error of 0.05086091818483745
+A chain of size 10^6 yields a relative empirical error of 0.01982217935355222
+---------------------------
+For a timestep of 0.001
+A chain of size 10^2 yields a relative empirical error of 1.0
+A chain of size 10^4 yields a relative empirical error of 0.1861324264839971
+A chain of size 10^6 yields a relative empirical error of 0.033407350060732074
+---------------------------</code></pre><p>In particular, for the convergence of the generator, we see that the error is roughly on the order of the timestep size, except for the last case. A heuristic explanation for this behavior is as follows. If we think of each entry of the matrix as a random variable then the convergence to the expected value (the exact entry of the matrix) is inversely proportional to the square root of the number of independent samples. As one decreases the timestep size, the number of independent samples decrease since the number of timesteps is fixed, that is to say we are looking at the simulation for an increasingly shorter amount of physical time. Roughly speaking one would expect the error to be </p><p class="math-container">\[error \propto \max \left(dt, \frac{1}{\sqrt{S}}  \right)\]</p><p>where <span>$S$</span> is the number of independent samples. In the last case, since the largest decorrelation time of the markov chain is on the order of 1 time unit, we expect the number of independent samples in a physical time interval of <span>$10^6  dt = 10^3$</span> to be roughly on the order of <span>$10^3 / 5$</span>, where 5 time units is taken as a decorrelation threshold for the markov chain. We see that the error is </p><pre><code class="language-julia hljs">approximate_error = 1 / sqrt(10^3 / 5)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.07071067811865475</code></pre><p>which is roughly the same order of magnitude as the final error.</p><p>We haven&#39;t discussed what happens as the number of states increases and the more nuanced behavior of both the generator matrix and transfer operator as the number of states increases. In general, the more states that one has the more data is needed to estimate the different entries of the matrix; however this need not always be the case, as there are some interesting exceptions to this rule. In particular if there is an underlying (or approximate) tensor product structure to the generator or transfer operator then the number of independent samples needed to estimate the entries of the matrix can be reduced. </p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../empirical_generator/">« Empirical Generator</a><a class="docs-footer-nextpage" href="../../Uncertainty Quantification/bayesian_empirical_generator/">Bayesian Empirical Generator »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.25 on <span class="colophon-date" title="Thursday 7 December 2023 17:22">Thursday 7 December 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
