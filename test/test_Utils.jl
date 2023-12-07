@@ -26,7 +26,7 @@ end
     Q = [-1.0 2.0; 1.0 -2.0]
     p = steady_state(Q)
     km = koopman_modes(Q)
-    @test abs(km[1, :]' * p) < 100 * eps(1.0)
+    @test abs(km[:, 1]' * p) < 100 * eps(1.0)
 end
 
 @testset "utilities: decorrelation times" begin
