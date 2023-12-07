@@ -56,9 +56,8 @@ end
 - `V⁻¹::Matrix`: The koopman modes of the generator matrix. Each row is a koopman mode
 """
 function koopman_modes(Q)
-    Λ, V = eigen(Q)
-    V⁻¹ = inv(V)
-    return V⁻¹
+    Λ, V = eigen(Q')
+    return V
 end
 
 """
