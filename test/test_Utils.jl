@@ -1,4 +1,4 @@
-using MarkovChainHammer, Test, Revise, Random, LinearAlgebra
+using MarkovChainHammer, Test, Random, LinearAlgebra
 using MarkovChainHammer.Utils
 import MarkovChainHammer.Utils: histogram
 import MarkovChainHammer.Utils: autocovariance

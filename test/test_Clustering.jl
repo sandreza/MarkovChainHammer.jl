@@ -1,4 +1,4 @@
-using MarkovChainHammer, Test, Revise, Random, LinearAlgebra
+using MarkovChainHammer, Test, Random, LinearAlgebra
 
 import MarkovChainHammer.Clustering: modularity_matrix, principal_vector, modularity
 import MarkovChainHammer.Clustering: split_community, leicht_newman

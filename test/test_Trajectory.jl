@@ -1,4 +1,4 @@
-using MarkovChainHammer, Test, Revise, Random, LinearAlgebra
+using MarkovChainHammer, Test, Random, LinearAlgebra
 import MarkovChainHammer.TransitionMatrix: count_operator, generator, holding_times, perron_frobenius
 import MarkovChainHammer.Trajectory: generate
 import MarkovChainHammer.Trajectory: ContinuousTimeEmpiricalProcess

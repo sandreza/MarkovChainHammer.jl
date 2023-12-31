@@ -1,4 +1,4 @@
-using MarkovChainHammer, Test, Revise, LinearAlgebra
+using MarkovChainHammer, Test, LinearAlgebra
 import MarkovChainHammer.TransitionMatrix: count_operator, generator, holding_times, perron_frobenius, sparse_count_operator
 import MarkovChainHammer.TransitionMatrix: symmetric_generator, symmetric_perron_frobenius
 
